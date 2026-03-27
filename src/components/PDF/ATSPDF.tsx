@@ -42,13 +42,6 @@ const styles = StyleSheet.create({
 	},
 	experienceItem: {
 		marginBottom: 10,
-		position: "relative",
-	},
-	connectionLine: {
-		position: "absolute",
-		left: -10,
-		width: 1,
-		backgroundColor: "#000",
 	},
 	itemHeader: {
 		flexDirection: "row",
@@ -114,24 +107,6 @@ const ATSPDF: React.FC<Props> = ({ data }) => {
 					<Text style={styles.sectionHeading}>Professional Experience</Text>
 					{professionalExperiences.map((exp) => (
 						<View key={exp.id} style={styles.experienceItem}>
-							{exp.connectTop && (
-								<View
-									style={{
-										...styles.connectionLine,
-										top: -10,
-										height: 10,
-									}}
-								/>
-							)}
-							{exp.connectBottom && (
-								<View
-									style={{
-										...styles.connectionLine,
-										bottom: -10,
-										height: 10,
-									}}
-								/>
-							)}
 							<View style={styles.itemHeader}>
 								<Text style={{ fontWeight: 700 }}>{exp.title}</Text>
 								<Text>
@@ -162,24 +137,6 @@ const ATSPDF: React.FC<Props> = ({ data }) => {
 						<Text style={styles.sectionHeading}>Other Skills</Text>
 						{otherSkills.map((skill) => (
 							<View key={skill.id} style={styles.experienceItem}>
-								{skill.connectTop && (
-									<View
-										style={{
-											...styles.connectionLine,
-											top: -15,
-											height: 15,
-										}}
-									/>
-								)}
-								{skill.connectBottom && (
-									<View
-										style={{
-											...styles.connectionLine,
-											bottom: -15,
-											height: 15,
-										}}
-									/>
-								)}
 								<Html {...htmlProps}>{skill.body}</Html>
 							</View>
 						))}

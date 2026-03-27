@@ -25,8 +25,6 @@ export type ResumeData = {
 		startDate: string;
 		endDate?: string;
 		body: string; // HTML supported
-		connectBottom?: boolean;
-		connectTop?: boolean;
 	}>;
 	techSkills: Array<{
 		id: string;
@@ -41,8 +39,6 @@ export type ResumeData = {
 	otherSkills: Array<{
 		id: string;
 		body: string; // HTML supported
-		connectBottom?: boolean;
-		connectTop?: boolean;
 	}>;
 	educations: Array<{
 		id: string;

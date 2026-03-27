@@ -67,13 +67,6 @@ const styles = StyleSheet.create({
 	},
 	experienceItem: {
 		marginBottom: 15,
-		position: "relative",
-	},
-	connectionLine: {
-		position: "absolute",
-		left: -12,
-		width: 1,
-		backgroundColor: "#ddd",
 	},
 	itemHeader: {
 		flexDirection: "row",
@@ -170,24 +163,6 @@ const ExecutiveTemplate: React.FC<Props> = ({
 								</Text>
 								{professionalExperiences.map((exp) => (
 									<View key={exp.id} style={styles.experienceItem}>
-										{exp.connectTop && (
-											<View
-												style={{
-													...styles.connectionLine,
-													top: -15,
-													height: 15,
-												}}
-											/>
-										)}
-										{exp.connectBottom && (
-											<View
-												style={{
-													...styles.connectionLine,
-													bottom: -15,
-													height: 15,
-												}}
-											/>
-										)}
 										<View style={styles.itemHeader}>
 											<Text style={styles.itemTitle}>{exp.title}</Text>
 											<Text style={styles.itemDate}>
@@ -281,24 +256,6 @@ const ExecutiveTemplate: React.FC<Props> = ({
 										key={skill.id}
 										style={{ ...styles.experienceItem, marginBottom: 10 }}
 									>
-										{skill.connectTop && (
-											<View
-												style={{
-													...styles.connectionLine,
-													top: -10,
-													height: 10,
-												}}
-											/>
-										)}
-										{skill.connectBottom && (
-											<View
-												style={{
-													...styles.connectionLine,
-													bottom: -10,
-													height: 10,
-												}}
-											/>
-										)}
 										<Html {...htmlProps}>{skill.body}</Html>
 									</View>
 								))}

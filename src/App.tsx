@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { useDeferredValue, useEffect, useState } from "react";
+import OnboardingTour from "./components/OnboardingTour";
 import ATSPDF from "./components/PDF/ATSPDF";
 import ExecutiveTemplate from "./components/PDF/ExecutiveTemplate";
 import MinimalTemplate from "./components/PDF/MinimalTemplate";
@@ -50,7 +51,6 @@ const initialData: ResumeData = {
 			organization: "Global Tech Solutions",
 			startDate: "Jan 2020",
 			body: "<ul><li>Spearheaded the development of a cloud-based enterprise application.</li><li>Implemented scalable microservices architecture using modern frameworks.</li><li>Led a team of developers to deliver high-quality code within tight deadlines.</li></ul>",
-			connectBottom: true,
 		},
 		{
 			id: "2",
@@ -59,7 +59,6 @@ const initialData: ResumeData = {
 			startDate: "Jun 2016",
 			endDate: "Dec 2019",
 			body: "<p>Contributed to the design and implementation of various web-based projects. Focused on optimizing performance and improving user experience.</p>",
-			connectTop: true,
 		},
 	],
 	techSkills: [
@@ -123,14 +122,12 @@ const JSON_SCHEMA = `
       "organization": "string",
       "startDate": "string",
       "endDate": "string (optional)",
-      "body": "string (HTML supported)",
-      "connectBottom": "boolean (optional)",
-      "connectTop": "boolean (optional)"
+      "body": "string (HTML supported)"
     }
   ],
   "techSkills": [{ "id": "string", "name": "string", "knowledge": "number (0-100)" }],
   "softSkills": [{ "id": "string", "name": "string", "knowledge": "number (0-100)" }],
-  "otherSkills": [{ "id": "string", "body": "string (HTML supported)", "connectBottom": "boolean (optional)", "connectTop": "boolean (optional)" }],
+  "otherSkills": [{ "id": "string", "body": "string (HTML supported)" }],
   "educations": [
     {
       "id": "string",
@@ -243,6 +240,7 @@ function App() {
 
 					<button
 						type="button"
+						data-tour="tour-schema"
 						onClick={() => setShowSchema(true)}
 						className="cursor-pointer flex items-center gap-2 bg-slate-700 text-blue-300 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-600 transition-colors border border-blue-500/30 mr-2"
 					>
@@ -288,7 +286,10 @@ function App() {
 							)}
 						</div>
 					</div>
-					<div className="flex-1 overflow-hidden pt-2 bg-[#0d1117]">
+					<div
+						className="flex-1 overflow-hidden pt-2 bg-[#0d1117]"
+						data-tour="tour-editor"
+					>
 						<Editor
 							height="100%"
 							defaultLanguage="json"
@@ -314,7 +315,10 @@ function App() {
 				{/* Preview Pane */}
 				<div className="w-[60%] bg-slate-950 flex flex-col relative">
 					{/* Template Selector Thumbnails */}
-					<div className="absolute top-4 left-6 z-20 flex items-center gap-3">
+					<div
+						className="absolute top-4 left-6 z-20 flex items-center gap-3"
+						data-tour="tour-templates"
+					>
 						{[
 							{
 								id: "ats",
@@ -439,7 +443,7 @@ function App() {
 
 								{/* Remaining colors revealed on hover */}
 								{[
-									{ name: "Blue", value: "#2563eb" },
+									{ name: "Blue", value: "#3d5a80" },
 									{ name: "Purple", value: "#5350a2" },
 									{ name: "Dark Red", value: "#b91c1c" },
 									{ name: "Brown", value: "#92400e" },
@@ -462,7 +466,10 @@ function App() {
 					</div>
 
 					<div className="flex-1 p-6 pt-28">
-						<div className="w-full h-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden bg-white border border-slate-800">
+						<div
+							className="w-full h-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden bg-white border border-slate-800"
+							data-tour="tour-preview"
+						>
 							<PDFViewer
 								key={`${template}-${JSON.stringify(deferredData).length}`}
 								width="100%"
@@ -528,6 +535,7 @@ function App() {
 					</div>
 				</div>
 			)}
+			<OnboardingTour />
 		</div>
 	);
 }
