@@ -1,38 +1,38 @@
 {
-	"name": "resumint",
-	"private": true,
-	"version": "0.0.0",
-	"type": "module",
-	"scripts": {
-		"dev": "vite",
-		"build": "tsc -b && vite build",
-		"lint": "biome check .",
-		"format": "biome format --write .",
-		"preview": "vite preview"
-	},
-	"dependencies": {
-		"@monaco-editor/react": "^4.7.0",
-		"@react-pdf/renderer": "^4.3.2",
-		"docx": "^9.6.1",
-		"file-saver": "^2.0.5",
-		"lucide-react": "^1.7.0",
-		"react": "^19.2.4",
-		"react-dom": "^19.2.4",
-		"react-pdf-html": "^2.1.5"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.4.9",
-		"@tailwindcss/postcss": "^4.2.2",
-		"@types/file-saver": "^2.0.7",
-		"@types/node": "^24.12.0",
-		"@types/react": "^19.2.14",
-		"@types/react-dom": "^19.2.3",
-		"@vitejs/plugin-react": "^6.0.1",
-		"autoprefixer": "^10.4.27",
-		"postcss": "^8.5.8",
-		"tailwindcss": "^4.2.2",
-		"typescript": "~5.9.3",
-		"vite": "^8.0.1"
-	},
-	"packageManager": "yarn@4.13.0"
+  "name": "resumint",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "@react-pdf/renderer": "^4.3.2",
+    "docx": "^9.6.1",
+    "file-saver": "^2.0.5",
+    "lucide-react": "^1.7.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-pdf-html": "^2.1.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.9",
+    "@tailwindcss/postcss": "^4.2.2",
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^24.12.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.1"
+  },
+  "packageManager": "yarn@4.13.0"
 }
