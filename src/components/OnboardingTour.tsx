@@ -17,31 +17,31 @@ interface Step {
 
 const steps: Step[] = [
 	{
-		target: "tour-schema",
-		title: "AI Power-up",
+		target: "tour-ai",
+		title: "Magic AI Builder",
 		content:
-			"Use this button to get a JSON schema you can give to ChatGPT or Claude. It transforms your raw text into the perfect format for this app.",
+			"Don't waste time typing! Use our Magic AI button to turn your existing resume or LinkedIn profile into a professional format in seconds using ChatGPT or Gemini.",
 		position: "bottom",
 	},
 	{
 		target: "tour-editor",
-		title: "Live JSON Editor",
+		title: "Easy Data Editor",
 		content:
-			"Paste your JSON here. The preview updates instantly as you type. Monaco editor gives you full syntax highlighting and formatting.",
+			"This is where your resume details are stored. You can type directly here to make quick changes to your name, job titles, or dates.",
 		position: "right",
 	},
 	{
 		target: "tour-templates",
-		title: "Choose Your Style",
+		title: "Choose Your Look",
 		content:
-			"Switch between ATS-friendly, Executive, Modern, and Minimal templates with a single click. Every style is crafted for impact.",
+			"Click these to instantly change how your resume looks. We have styles for every industry—from creative to corporate.",
 		position: "bottom",
 	},
 	{
 		target: "tour-preview",
-		title: "Review & Download",
+		title: "Preview & Print",
 		content:
-			"Check your resume in real-time. Use the viewer's toolbar to download your professional PDF. You're ready to apply!",
+			"See exactly what your resume will look like. Use the toolbar at the top of the page to download your finished PDF and start applying!",
 		position: "left",
 	},
 ];

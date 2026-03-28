@@ -1,6 +1,7 @@
 import { Editor } from "@monaco-editor/react";
 import { PDFViewer } from "@react-pdf/renderer";
 import {
+	Bot,
 	Check,
 	Copy,
 	FileJson,
@@ -11,7 +12,8 @@ import {
 	X,
 } from "lucide-react";
 import type React from "react";
-import { useDeferredValue, useEffect, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import AIAssistant from "./components/AIAssistant";
 import OnboardingTour from "./components/OnboardingTour";
 import ATSPDF from "./components/PDF/ATSPDF";
 import ExecutiveTemplate from "./components/PDF/ExecutiveTemplate";
@@ -150,6 +152,7 @@ function App() {
 	const [template, setTemplate] = useState<TemplateType>("modern");
 	const [accentColor, setAccentColor] = useState<string>("#5350a2");
 	const [showSchema, setShowSchema] = useState(false);
+	const [showAIAssistant, setShowAIAssistant] = useState(false);
 
 	// Debounce the update to the PDF engine
 	const deferredData = useDeferredValue(data);
@@ -187,6 +190,10 @@ function App() {
 	const copyToClipboard = (text: string) => {
 		navigator.clipboard.writeText(text);
 		alert("Copied to clipboard!");
+	};
+
+	const handleAIUpdate = (newData: ResumeData) => {
+		setJsonData(JSON.stringify(newData, null, 2));
 	};
 
 	const renderTemplate = () => {
@@ -240,9 +247,22 @@ function App() {
 
 					<button
 						type="button"
+						data-tour="tour-ai"
+						onClick={() => setShowAIAssistant(true)}
+						className="cursor-pointer flex items-center gap-2 bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-black hover:bg-emerald-500 transition-all shadow-[0_0_15px_rgba(16,185,129,0.4)] mr-2 group"
+					>
+						<Bot
+							size={16}
+							className="group-hover:rotate-12 transition-transform"
+						/>
+						MAGIC AI BUILDER
+					</button>
+
+					<button
+						type="button"
 						data-tour="tour-schema"
 						onClick={() => setShowSchema(true)}
-						className="cursor-pointer flex items-center gap-2 bg-slate-700 text-blue-300 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-600 transition-colors border border-blue-500/30 mr-2"
+						className="hidden cursor-pointer flex items-center gap-2 bg-slate-700 text-blue-300 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-600 transition-colors border border-blue-500/30 mr-2"
 					>
 						<Sparkles size={14} />
 						LLM SCHEMA
@@ -471,7 +491,7 @@ function App() {
 							data-tour="tour-preview"
 						>
 							<PDFViewer
-								key={`${template}-${JSON.stringify(deferredData).length}`}
+								key={template}
 								width="100%"
 								height="100%"
 								showToolbar={true}
@@ -535,6 +555,12 @@ function App() {
 					</div>
 				</div>
 			)}
+			<AIAssistant
+				isOpen={showAIAssistant}
+				onClose={() => setShowAIAssistant(false)}
+				onUpdateData={handleAIUpdate}
+				currentData={data}
+			/>
 			<OnboardingTour />
 		</div>
 	);
