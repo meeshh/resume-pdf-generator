@@ -27,6 +27,7 @@ import {
   Trash2,
   User,
 } from "lucide-react";
+import { memo, useEffect } from "react";
 import { useResumeStore } from "../store/useResumeStore";
 import type { ResumeData } from "../types/ResumeData";
 
@@ -93,16 +94,20 @@ function SortableItem({
   );
 }
 
-export default function FormEditor() {
+function FormEditorComponent() {
   const { data, setData, reorderArray } = useResumeStore();
 
   const form = useForm({
     defaultValues: data,
-    values: data,
     onSubmit: async ({ value }) => {
       setData(value);
     },
   });
+
+  // Sync form when store data changes (e.g. from Source Code or AI)
+  useEffect(() => {
+    form.update({ defaultValues: data });
+  }, [data, form]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -654,3 +659,6 @@ export default function FormEditor() {
     </div>
   );
 }
+
+const FormEditor = memo(FormEditorComponent);
+export default FormEditor;
