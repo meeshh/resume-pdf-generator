@@ -6,7 +6,8 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import React, { memo } from "react";
+import type React from "react";
+import { memo } from "react";
 import Html from "react-pdf-html";
 import type { ResumeData } from "../../types/ResumeData";
 
@@ -158,10 +159,7 @@ const ExecutiveTemplate: React.FC<Props> = ({
         <View style={{ ...styles.header, backgroundColor: accentColor }}>
           <View style={styles.headerLeft}>
             {personal?.photoUrl && (
-              <Image
-                src={personal.photoUrl}
-                style={styles.photo}
-              />
+              <Image src={personal.photoUrl} style={styles.photo} />
             )}
             <View style={styles.headerTitle}>
               <Text style={styles.name}>{fullName}</Text>
@@ -296,4 +294,3 @@ const ExecutiveTemplate: React.FC<Props> = ({
 };
 
 export default memo(ExecutiveTemplate);
-

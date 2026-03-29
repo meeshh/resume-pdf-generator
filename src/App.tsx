@@ -6,14 +6,13 @@ import {
   Copy,
   FileJson,
   FileText,
-  Layout,
   RefreshCw,
   Sparkles,
   Upload,
   X,
 } from "lucide-react";
 import type React from "react";
-import { useDeferredValue, useState, useMemo, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import AIAssistant from "./components/AIAssistant";
 import FormEditor from "./components/FormEditor";
 import OnboardingTour from "./components/OnboardingTour";
@@ -23,7 +22,6 @@ import MinimalTemplate from "./components/PDF/MinimalTemplate";
 import ModernTemplate from "./components/PDF/ModernTemplate";
 import VerticalTemplate from "./components/PDF/VerticalTemplate";
 import { useResumeStore } from "./store/useResumeStore";
-import type { ResumeData } from "./types/ResumeData";
 import { generateWordResume } from "./utils/wordGenerator";
 
 type TemplateType = "modern" | "minimal" | "vertical" | "executive" | "ats";
@@ -76,7 +74,8 @@ const JSON_SCHEMA = `
 `;
 
 function App() {
-  const { data, jsonData, error, version, setData, setJsonData } = useResumeStore();
+  const { data, jsonData, error, version, setData, setJsonData } =
+    useResumeStore();
   const [template, setTemplate] = useState<TemplateType>("modern");
   const [accentColor, setAccentColor] = useState<string>("#5350a2");
   const [showSchema, setShowSchema] = useState(false);
@@ -97,26 +96,33 @@ function App() {
   const pdfDocument = useMemo(() => {
     switch (template) {
       case "modern":
-        return <ModernTemplate data={debouncedData} accentColor={accentColor} />;
+        return (
+          <ModernTemplate data={debouncedData} accentColor={accentColor} />
+        );
       case "minimal":
-        return <MinimalTemplate data={debouncedData} accentColor={accentColor} />;
+        return (
+          <MinimalTemplate data={debouncedData} accentColor={accentColor} />
+        );
       case "vertical":
-        return <VerticalTemplate data={debouncedData} accentColor={accentColor} />;
+        return (
+          <VerticalTemplate data={debouncedData} accentColor={accentColor} />
+        );
       case "executive":
-        return <ExecutiveTemplate data={debouncedData} accentColor={accentColor} />;
+        return (
+          <ExecutiveTemplate data={debouncedData} accentColor={accentColor} />
+        );
       case "ats":
         return <ATSPDF data={debouncedData} />;
       default:
-        return <ModernTemplate data={debouncedData} accentColor={accentColor} />;
+        return (
+          <ModernTemplate data={debouncedData} accentColor={accentColor} />
+        );
     }
   }, [template, debouncedData, accentColor]);
 
   const handleRefresh = useCallback(() => {
     setRefreshKey((prev) => prev + 1);
   }, []);
-
-  // Debounce the update to the PDF engine
-  const deferredData = useDeferredValue(data);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -141,29 +147,6 @@ function App() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     alert("Copied to clipboard!");
-  };
-
-  const renderTemplate = () => {
-    switch (template) {
-      case "modern":
-        return <ModernTemplate data={data} accentColor={accentColor} />;
-      case "minimal":
-        return (
-          <MinimalTemplate data={data} accentColor={accentColor} />
-        );
-      case "vertical":
-        return (
-          <VerticalTemplate data={data} accentColor={accentColor} />
-        );
-      case "executive":
-        return (
-          <ExecutiveTemplate data={data} accentColor={accentColor} />
-        );
-      case "ats":
-        return <ATSPDF data={data} />;
-      default:
-        return <ModernTemplate data={data} accentColor={accentColor} />;
-    }
   };
 
   return (
@@ -449,7 +432,7 @@ function App() {
               data-color-mode="light"
             >
               <PDFViewer
-                key={`${template}-${JSON.stringify(debouncedData).length}-${refreshKey}-${debouncedData.personal?.photoUrl?.slice(-5)}`}
+                key={`${template}-${JSON.stringify(debouncedData).length}-${refreshKey}-${version}-${debouncedData.personal?.photoUrl?.slice(-5)}`}
                 width="100%"
                 height="100%"
                 showToolbar={true}

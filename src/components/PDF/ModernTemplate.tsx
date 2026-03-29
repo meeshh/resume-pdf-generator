@@ -6,7 +6,8 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import React, { memo } from "react";
+import type React from "react";
+import { memo } from "react";
 import Html from "react-pdf-html";
 import type { ResumeData } from "../../types/ResumeData";
 
@@ -190,10 +191,7 @@ const ModernTemplate: React.FC<Props> = ({ data, accentColor = "#5350a2" }) => {
         {/* Modern Header */}
         <View style={styles.header}>
           {personal?.photoUrl && (
-            <Image
-              src={personal.photoUrl}
-              style={styles.photo}
-            />
+            <Image src={personal.photoUrl} style={styles.photo} />
           )}
           <View style={styles.headerContent}>
             <View style={styles.nameContainer}>

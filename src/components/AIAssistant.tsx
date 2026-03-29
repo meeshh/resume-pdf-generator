@@ -73,10 +73,7 @@ const JSON_SCHEMA = `
 }
 `;
 
-const AIAssistant: React.FC<AIAssistantProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const AIAssistant: React.FC<AIAssistantProps> = ({ isOpen, onClose }) => {
   const { data, setData } = useResumeStore();
   const [rawText, setRawText] = useState("");
   const [pastedJson, setPastedJson] = useState("");

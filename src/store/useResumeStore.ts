@@ -1,18 +1,22 @@
+import { arrayMove } from "@dnd-kit/sortable";
 import { create } from "zustand";
 import type { ResumeData } from "../types/ResumeData";
-import { arrayMove } from "@dnd-kit/sortable";
 
 interface ResumeStore {
   data: ResumeData;
   jsonData: string;
   error: string | null;
   version: number;
-  
+
   // Actions
   setData: (data: ResumeData) => void;
   setJsonData: (json: string) => void;
-  updateField: (path: string, value: any) => void;
-  reorderArray: (fieldName: keyof ResumeData, activeId: string, overId: string) => void;
+  updateField: (path: string, value: unknown) => void;
+  reorderArray: (
+    fieldName: keyof ResumeData,
+    activeId: string,
+    overId: string,
+  ) => void;
 }
 
 const initialData: ResumeData = {
@@ -93,22 +97,22 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
   version: 0,
 
   setData: (data) => {
-    set((state) => ({ 
-      data, 
+    set((state) => ({
+      data,
       jsonData: JSON.stringify(data, null, 2),
       error: null,
-      version: state.version + 1
+      version: state.version + 1,
     }));
   },
 
   setJsonData: (jsonData) => {
     try {
       const parsed = JSON.parse(jsonData);
-      set((state) => ({ 
-        jsonData, 
+      set((state) => ({
+        jsonData,
         data: parsed,
         error: null,
-        version: state.version + 1
+        version: state.version + 1,
       }));
     } catch (_e) {
       set({ jsonData, error: "Invalid JSON format" });
@@ -117,24 +121,28 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
 
   updateField: (path, value) => {
     const newData = { ...get().data };
-    const parts = path.split('.');
+    const parts = path.split(".");
+    // biome-ignore lint/suspicious/noExplicitAny: Deep path updates with dynamic keys require any for traversal
     let current: any = newData;
-    
+
     for (let i = 0; i < parts.length - 1; i++) {
       current = { ...current[parts[i]] };
     }
     current[parts[parts.length - 1]] = value;
-    
-    set((state) => ({ 
-      data: newData, 
+
+    set((state) => ({
+      data: newData,
       jsonData: JSON.stringify(newData, null, 2),
-      version: state.version + 1
+      version: state.version + 1,
     }));
   },
 
   reorderArray: (fieldName, activeId, overId) => {
     const { data, version } = get();
-    const items = [...(data[fieldName] as any[])];
+    const fieldValue = data[fieldName];
+    if (!Array.isArray(fieldValue)) return;
+
+    const items = [...fieldValue] as Array<{ id: string }>;
     if (!items) return;
 
     const oldIndex = items.findIndex((item) => item.id === activeId);
@@ -146,9 +154,9 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
       set({
         data: newData,
         jsonData: JSON.stringify(newData, null, 2),
-        version: version + 1
+        version: version + 1,
       });
       console.log(`Successfully reordered ${fieldName}`);
     }
-  }
+  },
 }));

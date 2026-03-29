@@ -6,7 +6,8 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import React, { memo } from "react";
+import type React from "react";
+import { memo } from "react";
 import Html from "react-pdf-html";
 import type { ResumeData } from "../../types/ResumeData";
 
@@ -147,10 +148,7 @@ const VerticalTemplate: React.FC<Props> = ({
         {/* Sidebar */}
         <View style={{ ...styles.sidebar, backgroundColor: accentColor }}>
           {personal?.photoUrl && (
-            <Image
-              src={personal.photoUrl}
-              style={styles.photo}
-            />
+            <Image src={personal.photoUrl} style={styles.photo} />
           )}
           <Text style={styles.name}>{fullName}</Text>
           <Text style={styles.title}>{personal?.title || ""}</Text>
@@ -267,4 +265,3 @@ const VerticalTemplate: React.FC<Props> = ({
 };
 
 export default memo(VerticalTemplate);
-
