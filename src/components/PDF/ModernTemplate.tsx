@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import type React from "react";
+import React, { memo } from "react";
 import Html from "react-pdf-html";
 import type { ResumeData } from "../../types/ResumeData";
 
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
+    objectFit: "cover",
   },
   headerContent: {
     flex: 1,
@@ -181,29 +182,32 @@ const ModernTemplate: React.FC<Props> = ({ data, accentColor = "#5350a2" }) => {
     educations = [],
     languages = [],
   } = data;
-  const fullName = `${personal.firstName || ""} ${personal.lastName || ""}`;
+  const fullName = `${personal?.firstName || ""} ${personal?.lastName || ""}`;
 
   return (
     <Document author={fullName} title={fullName}>
       <Page size="A4" style={styles.page}>
         {/* Modern Header */}
         <View style={styles.header}>
-          {personal.photoUrl && (
-            <Image src={personal.photoUrl} style={styles.photo} />
+          {personal?.photoUrl && (
+            <Image
+              src={personal.photoUrl}
+              style={styles.photo}
+            />
           )}
           <View style={styles.headerContent}>
             <View style={styles.nameContainer}>
               <Text style={{ ...styles.firstName, color: accentColor }}>
-                {personal.firstName}
+                {personal?.firstName || ""}
               </Text>
-              <Text style={styles.lastName}>{personal.lastName}</Text>
+              <Text style={styles.lastName}>{personal?.lastName || ""}</Text>
             </View>
-            <Text style={styles.personTitle}>{personal.title}</Text>
+            <Text style={styles.personTitle}>{personal?.title || ""}</Text>
           </View>
           <View style={styles.contactInfo}>
-            <Text style={styles.contactText}>{personal.location}</Text>
-            <Text style={styles.contactText}>{personal.email}</Text>
-            <Text style={styles.contactText}>{personal.mobile}</Text>
+            <Text style={styles.contactText}>{personal?.location || ""}</Text>
+            <Text style={styles.contactText}>{personal?.email || ""}</Text>
+            <Text style={styles.contactText}>{personal?.mobile || ""}</Text>
           </View>
         </View>
 
@@ -338,4 +342,4 @@ const ModernTemplate: React.FC<Props> = ({ data, accentColor = "#5350a2" }) => {
   );
 };
 
-export default ModernTemplate;
+export default memo(ModernTemplate);

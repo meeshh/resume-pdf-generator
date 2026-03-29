@@ -6,95 +6,27 @@ import {
   Copy,
   FileJson,
   FileText,
+  Layout,
   RefreshCw,
   Sparkles,
   Upload,
   X,
 } from "lucide-react";
 import type React from "react";
-import { useDeferredValue, useEffect, useState } from "react";
+import { useDeferredValue, useState, useMemo, useCallback, useEffect } from "react";
 import AIAssistant from "./components/AIAssistant";
+import FormEditor from "./components/FormEditor";
 import OnboardingTour from "./components/OnboardingTour";
 import ATSPDF from "./components/PDF/ATSPDF";
 import ExecutiveTemplate from "./components/PDF/ExecutiveTemplate";
 import MinimalTemplate from "./components/PDF/MinimalTemplate";
 import ModernTemplate from "./components/PDF/ModernTemplate";
 import VerticalTemplate from "./components/PDF/VerticalTemplate";
+import { useResumeStore } from "./store/useResumeStore";
 import type { ResumeData } from "./types/ResumeData";
 import { generateWordResume } from "./utils/wordGenerator";
 
 type TemplateType = "modern" | "minimal" | "vertical" | "executive" | "ats";
-
-const initialData: ResumeData = {
-  personal: {
-    firstName: "JOHN",
-    lastName: "DOE",
-    title: "Senior Software Engineer",
-    location: "City, Country",
-    email: "john.doe@example.com",
-    mobile: "+00 000 000 00 00",
-    photoUrl: "",
-    summary:
-      "<p>A highly motivated and experienced <strong>Software Engineer</strong> with a proven track record of developing innovative solutions and leading successful teams.</p>",
-  },
-  labels: {
-    workExperience: "Work Experience",
-    skills: "Technical Skills",
-    otherSkills: "Other Skills",
-    education: "Education",
-    certifications: "Certifications",
-    languages: "Languages",
-    present: "Present",
-  },
-  professionalExperiences: [
-    {
-      id: "1",
-      title: "Senior Software Engineer",
-      organization: "Global Tech Solutions",
-      startDate: "Jan 2020",
-      body: "<ul><li>Spearheaded the development of a cloud-based enterprise application.</li><li>Implemented scalable microservices architecture using modern frameworks.</li><li>Led a team of developers to deliver high-quality code within tight deadlines.</li></ul>",
-    },
-    {
-      id: "2",
-      title: "Software Developer",
-      organization: "Innovative Startups Inc.",
-      startDate: "Jun 2016",
-      endDate: "Dec 2019",
-      body: "<p>Contributed to the design and implementation of various web-based projects. Focused on optimizing performance and improving user experience.</p>",
-    },
-  ],
-  techSkills: [
-    { id: "1", name: "JavaScript / TypeScript", knowledge: 90 },
-    { id: "2", name: "React / Angular / Vue", knowledge: 85 },
-    { id: "3", name: "Node.js / Python / Go", knowledge: 80 },
-    { id: "4", name: "SQL / NoSQL Databases", knowledge: 75 },
-  ],
-  softSkills: [
-    { id: "s1", name: "Leadership", knowledge: 85 },
-    { id: "s2", name: "Problem Solving", knowledge: 95 },
-    { id: "s3", name: "Communication", knowledge: 90 },
-  ],
-  otherSkills: [
-    {
-      id: "o1",
-      body: "<p>Docker, Kubernetes, AWS, CI/CD, Agile Methodologies</p>",
-    },
-  ],
-  educations: [
-    {
-      id: "e1",
-      degree: "Bachelor of Science in Computer Science",
-      organization: "State University",
-      startYear: "2012",
-      endYear: "2016",
-    },
-  ],
-  certifications: [],
-  languages: [
-    { id: "l1", language: "English", level: 5 },
-    { id: "l2", language: "French", level: 3 },
-  ],
-};
 
 const JSON_SCHEMA = `
 {
@@ -144,28 +76,47 @@ const JSON_SCHEMA = `
 `;
 
 function App() {
-  const [jsonData, setJsonData] = useState<string>(
-    JSON.stringify(initialData, null, 2),
-  );
-  const [data, setData] = useState<ResumeData>(initialData);
-  const [error, setError] = useState<string | null>(null);
+  const { data, jsonData, error, version, setData, setJsonData } = useResumeStore();
   const [template, setTemplate] = useState<TemplateType>("modern");
   const [accentColor, setAccentColor] = useState<string>("#5350a2");
   const [showSchema, setShowSchema] = useState(false);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [editMode, setEditMode] = useState<"code" | "form">("form");
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Custom debounce for PDF data to prevent laggy re-renders
+  const [debouncedData, setDebouncedData] = useState(data);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedData(data);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [data]);
+
+  // Memoize the template selection to prevent unnecessary heavy calculations
+  const pdfDocument = useMemo(() => {
+    switch (template) {
+      case "modern":
+        return <ModernTemplate data={debouncedData} accentColor={accentColor} />;
+      case "minimal":
+        return <MinimalTemplate data={debouncedData} accentColor={accentColor} />;
+      case "vertical":
+        return <VerticalTemplate data={debouncedData} accentColor={accentColor} />;
+      case "executive":
+        return <ExecutiveTemplate data={debouncedData} accentColor={accentColor} />;
+      case "ats":
+        return <ATSPDF data={debouncedData} />;
+      default:
+        return <ModernTemplate data={debouncedData} accentColor={accentColor} />;
+    }
+  }, [template, debouncedData, accentColor]);
+
+  const handleRefresh = useCallback(() => {
+    setRefreshKey((prev) => prev + 1);
+  }, []);
 
   // Debounce the update to the PDF engine
   const deferredData = useDeferredValue(data);
-
-  useEffect(() => {
-    try {
-      const parsed = JSON.parse(jsonData);
-      setData(parsed);
-      setError(null);
-    } catch (_e) {
-      setError("Invalid JSON format");
-    }
-  }, [jsonData]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -182,7 +133,7 @@ function App() {
     reader.onload = (event) => {
       const updatedData = { ...data };
       updatedData.personal.photoUrl = event.target?.result as string;
-      setJsonData(JSON.stringify(updatedData, null, 2));
+      setData(updatedData);
     };
     reader.readAsDataURL(file);
   };
@@ -192,30 +143,26 @@ function App() {
     alert("Copied to clipboard!");
   };
 
-  const handleAIUpdate = (newData: ResumeData) => {
-    setJsonData(JSON.stringify(newData, null, 2));
-  };
-
   const renderTemplate = () => {
     switch (template) {
       case "modern":
-        return <ModernTemplate data={deferredData} accentColor={accentColor} />;
+        return <ModernTemplate data={data} accentColor={accentColor} />;
       case "minimal":
         return (
-          <MinimalTemplate data={deferredData} accentColor={accentColor} />
+          <MinimalTemplate data={data} accentColor={accentColor} />
         );
       case "vertical":
         return (
-          <VerticalTemplate data={deferredData} accentColor={accentColor} />
+          <VerticalTemplate data={data} accentColor={accentColor} />
         );
       case "executive":
         return (
-          <ExecutiveTemplate data={deferredData} accentColor={accentColor} />
+          <ExecutiveTemplate data={data} accentColor={accentColor} />
         );
       case "ats":
-        return <ATSPDF data={deferredData} />;
+        return <ATSPDF data={data} />;
       default:
-        return <ModernTemplate data={deferredData} accentColor={accentColor} />;
+        return <ModernTemplate data={data} accentColor={accentColor} />;
     }
   };
 
@@ -258,16 +205,6 @@ function App() {
             MAGIC AI BUILDER
           </button>
 
-          {/* <button
-            type="button"
-            data-tour="tour-schema"
-            onClick={() => setShowSchema(true)}
-            className="hidden cursor-pointer flex items-center gap-2 bg-slate-700 text-blue-300 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-600 transition-colors border border-blue-500/30 mr-2"
-          >
-            <Sparkles size={14} />
-            LLM SCHEMA
-          </button> */}
-
           <label className="flex items-center gap-2 bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer hover:bg-blue-500 transition-colors shadow-lg">
             <Upload size={14} />
             IMPORT JSON
@@ -286,9 +223,22 @@ function App() {
         {/* Editor Pane */}
         <div className="w-[40%] flex flex-col border-r border-slate-700">
           <div className="px-4 py-2 bg-slate-800 border-b border-slate-700 flex justify-between items-center">
-            <span className="text-[10px] font-black text-slate-500 tracking-widest uppercase">
-              Source Code
-            </span>
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => setEditMode("form")}
+                className={`cursor-pointer text-[10px] font-black tracking-widest uppercase transition-colors ${editMode === "form" ? "text-blue-400" : "text-slate-500 hover:text-slate-400"}`}
+              >
+                Form Editor
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditMode("code")}
+                className={`cursor-pointer text-[10px] font-black tracking-widest uppercase transition-colors ${editMode === "code" ? "text-blue-400" : "text-slate-500 hover:text-slate-400"}`}
+              >
+                Source Code
+              </button>
+            </div>
             <div className="flex gap-4">
               <label className="text-[10px] font-bold text-blue-400 cursor-pointer hover:text-blue-300 transition-colors">
                 ATTACH PHOTO
@@ -307,28 +257,34 @@ function App() {
             </div>
           </div>
           <div
-            className="flex-1 overflow-hidden pt-2 bg-[#0d1117]"
+            className="flex-1 overflow-hidden bg-[#0d1117]"
             data-tour="tour-editor"
           >
-            <Editor
-              height="100%"
-              defaultLanguage="json"
-              theme="vs-dark"
-              value={jsonData}
-              onChange={(value) => setJsonData(value || "")}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 13,
-                lineNumbers: "on",
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-                padding: { top: 16, bottom: 16 },
-                wordWrap: "on",
-                formatOnPaste: true,
-                formatOnType: true,
-                backgroundColor: "#0d1117",
-              }}
-            />
+            {editMode === "code" ? (
+              <div className="h-full pt-2">
+                <Editor
+                  height="100%"
+                  defaultLanguage="json"
+                  theme="vs-dark"
+                  value={jsonData}
+                  onChange={(value) => setJsonData(value || "")}
+                  options={{
+                    minimap: { enabled: false },
+                    fontSize: 13,
+                    lineNumbers: "on",
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true,
+                    padding: { top: 16, bottom: 16 },
+                    wordWrap: "on",
+                    formatOnPaste: true,
+                    formatOnType: true,
+                    backgroundColor: "#0d1117",
+                  }}
+                />
+              </div>
+            ) : (
+              <FormEditor />
+            )}
           </div>
         </div>
 
@@ -445,7 +401,7 @@ function App() {
           <div className="absolute top-4 right-8 z-20 flex flex-col gap-3 items-center">
             <button
               type="button"
-              onClick={() => setJsonData(JSON.stringify(data, null, 2))}
+              onClick={handleRefresh}
               className="cursor-pointer  p-2 bg-slate-800 text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all border border-slate-700 hover:bg-slate-700"
               title="Refresh Preview"
             >
@@ -489,15 +445,17 @@ function App() {
             <div
               className="w-full h-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden bg-white border border-slate-800"
               data-tour="tour-preview"
+              data-darkreader-ignore="true"
+              data-color-mode="light"
             >
               <PDFViewer
-                key={template}
+                key={`${template}-${JSON.stringify(debouncedData).length}-${refreshKey}-${debouncedData.personal?.photoUrl?.slice(-5)}`}
                 width="100%"
                 height="100%"
                 showToolbar={true}
                 className="border-none"
               >
-                {renderTemplate()}
+                {pdfDocument}
               </PDFViewer>
             </div>
           </div>
@@ -539,7 +497,7 @@ function App() {
               <button
                 type="button"
                 onClick={() => copyToClipboard(JSON_SCHEMA)}
-                className="cursor-pointer flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-500 transition-colors"
+                className="cursor-pointer flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-600/30 transition-colors"
               >
                 <Copy size={16} />
                 COPY SCHEMA
@@ -558,8 +516,6 @@ function App() {
       <AIAssistant
         isOpen={showAIAssistant}
         onClose={() => setShowAIAssistant(false)}
-        onUpdateData={handleAIUpdate}
-        currentData={data}
       />
       <OnboardingTour />
     </div>

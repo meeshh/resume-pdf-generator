@@ -1,5 +1,12 @@
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
-import type React from "react";
+import {
+  Document,
+  Image,
+  Page,
+  StyleSheet,
+  Text,
+  View,
+} from "@react-pdf/renderer";
+import React, { memo } from "react";
 import Html from "react-pdf-html";
 import type { ResumeData } from "../../types/ResumeData";
 
@@ -25,6 +32,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 15,
     alignItems: "center",
+  },
+  photo: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginBottom: 10,
+    objectFit: "cover",
   },
   name: {
     fontSize: fontSizes.name,
@@ -129,6 +143,12 @@ const MinimalTemplate: React.FC<Props> = ({ data, accentColor = "#000" }) => {
       <Page size="A4" style={styles.page}>
         {/* Centered Header */}
         <View style={styles.header}>
+          {personal.photoUrl && (
+            <Image
+              src={personal.photoUrl}
+              style={styles.photo}
+            />
+          )}
           <Text style={{ ...styles.name, color: accentColor }}>{fullName}</Text>
           <Text style={styles.personTitle}>{personal.title}</Text>
           <View style={styles.contactInfo}>
@@ -283,4 +303,4 @@ const MinimalTemplate: React.FC<Props> = ({ data, accentColor = "#000" }) => {
   );
 };
 
-export default MinimalTemplate;
+export default memo(MinimalTemplate);

@@ -1,5 +1,12 @@
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
-import type React from "react";
+import {
+  Document,
+  Image,
+  Page,
+  StyleSheet,
+  Text,
+  View,
+} from "@react-pdf/renderer";
+import React, { memo } from "react";
 import Html from "react-pdf-html";
 import type { ResumeData } from "../../types/ResumeData";
 
@@ -15,6 +22,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderBottom: "1px solid #000",
     paddingBottom: 10,
+    flexDirection: "row",
+    gap: 20,
+    alignItems: "center",
+  },
+  photo: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    objectFit: "cover",
+  },
+  headerText: {
+    flex: 1,
   },
   name: {
     fontSize: 18,
@@ -24,7 +43,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 12,
     fontWeight: 700,
-    marginTop: 10,
+    marginTop: 4,
   },
   contact: {
     marginTop: 4,
@@ -89,11 +108,19 @@ const ATSPDF: React.FC<Props> = ({ data }) => {
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.name}>{fullName}</Text>
-          <Text style={styles.title}>{personal.title}</Text>
-          <Text style={styles.contact}>
-            {personal.location} | {personal.email} | {personal.mobile}
-          </Text>
+          {personal.photoUrl && (
+            <Image
+              src={personal.photoUrl}
+              style={styles.photo}
+            />
+          )}
+          <View style={styles.headerText}>
+            <Text style={styles.name}>{fullName}</Text>
+            <Text style={styles.title}>{personal.title}</Text>
+            <Text style={styles.contact}>
+              {personal.location} | {personal.email} | {personal.mobile}
+            </Text>
+          </View>
         </View>
 
         {/* Summary */}
@@ -175,4 +202,5 @@ const ATSPDF: React.FC<Props> = ({ data }) => {
   );
 };
 
-export default ATSPDF;
+export default memo(ATSPDF);
+

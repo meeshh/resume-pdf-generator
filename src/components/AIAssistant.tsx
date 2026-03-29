@@ -9,13 +9,11 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import type { ResumeData } from "../types/ResumeData";
+import { useResumeStore } from "../store/useResumeStore";
 
 interface AIAssistantProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpdateData: (newData: ResumeData) => void;
-  currentData: ResumeData;
 }
 
 const JSON_SCHEMA = `
@@ -78,9 +76,8 @@ const JSON_SCHEMA = `
 const AIAssistant: React.FC<AIAssistantProps> = ({
   isOpen,
   onClose,
-  onUpdateData,
-  currentData,
 }) => {
+  const { data, setData } = useResumeStore();
   const [rawText, setRawText] = useState("");
   const [pastedJson, setPastedJson] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -97,7 +94,7 @@ IMPORTANT RULES:
 1. Respond ONLY with the JSON object. No pre-amble, no explanations.
 2. Use basic HTML tags (<b>, <i>, <ul>, <li>, <p>) in the 'summary' and 'body' fields to ensure professional formatting.
 3. If data is missing, use empty strings or empty arrays as per the schema.
-4. Keep the 'labels' object consistent with: ${JSON.stringify(currentData.labels, null, 2)}
+4. Keep the 'labels' object consistent with: ${JSON.stringify(data.labels, null, 2)}
 
 HERE IS THE DATA TO CONVERT:
 ---
@@ -131,7 +128,7 @@ ${rawText || "No data provided yet."}
       }
 
       const parsed = JSON.parse(cleanJson);
-      onUpdateData(parsed);
+      setData(parsed);
       setRawText("");
       setPastedJson("");
       setError(null);

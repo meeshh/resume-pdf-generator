@@ -1,5 +1,12 @@
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
-import type React from "react";
+import {
+  Document,
+  Image,
+  Page,
+  StyleSheet,
+  Text,
+  View,
+} from "@react-pdf/renderer";
+import React, { memo } from "react";
 import Html from "react-pdf-html";
 import type { ResumeData } from "../../types/ResumeData";
 
@@ -19,7 +26,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  photo: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginRight: 15,
+    objectFit: "cover",
+  },
   headerLeft: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  headerTitle: {
     flex: 1,
   },
   headerRight: {
@@ -130,7 +149,7 @@ const ExecutiveTemplate: React.FC<Props> = ({
     languages = [],
     otherSkills = [],
   } = data;
-  const fullName = `${personal.firstName} ${personal.lastName}`;
+  const fullName = `${personal?.firstName || ""} ${personal?.lastName || ""}`;
 
   return (
     <Document title={fullName}>
@@ -138,13 +157,21 @@ const ExecutiveTemplate: React.FC<Props> = ({
         {/* Full Width Header */}
         <View style={{ ...styles.header, backgroundColor: accentColor }}>
           <View style={styles.headerLeft}>
-            <Text style={styles.name}>{fullName}</Text>
-            <Text style={styles.title}>{personal.title}</Text>
+            {personal?.photoUrl && (
+              <Image
+                src={personal.photoUrl}
+                style={styles.photo}
+              />
+            )}
+            <View style={styles.headerTitle}>
+              <Text style={styles.name}>{fullName}</Text>
+              <Text style={styles.title}>{personal?.title || ""}</Text>
+            </View>
           </View>
           <View style={styles.headerRight}>
-            <Text style={styles.contactText}>{personal.location}</Text>
-            <Text style={styles.contactText}>{personal.email}</Text>
-            <Text style={styles.contactText}>{personal.mobile}</Text>
+            <Text style={styles.contactText}>{personal?.location || ""}</Text>
+            <Text style={styles.contactText}>{personal?.email || ""}</Text>
+            <Text style={styles.contactText}>{personal?.mobile || ""}</Text>
           </View>
         </View>
 
@@ -152,7 +179,7 @@ const ExecutiveTemplate: React.FC<Props> = ({
           <View style={styles.mainColumn}>
             {/* Summary */}
             <View style={styles.section}>
-              <Html {...htmlProps}>{personal.summary}</Html>
+              <Html {...htmlProps}>{personal?.summary || ""}</Html>
             </View>
 
             {/* Experience */}
@@ -268,4 +295,5 @@ const ExecutiveTemplate: React.FC<Props> = ({
   );
 };
 
-export default ExecutiveTemplate;
+export default memo(ExecutiveTemplate);
+

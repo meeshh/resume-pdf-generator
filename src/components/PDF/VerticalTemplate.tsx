@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import type React from "react";
+import React, { memo } from "react";
 import Html from "react-pdf-html";
 import type { ResumeData } from "../../types/ResumeData";
 
@@ -34,7 +34,9 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     marginBottom: 15,
-    border: "2px solid #fff",
+    borderWidth: 2,
+    borderColor: "#fff",
+    objectFit: "cover",
   },
   name: {
     fontSize: 18,
@@ -137,24 +139,27 @@ const VerticalTemplate: React.FC<Props> = ({
     educations = [],
     languages = [],
   } = data;
-  const fullName = `${personal.firstName} ${personal.lastName}`;
+  const fullName = `${personal?.firstName || ""} ${personal?.lastName || ""}`;
 
   return (
     <Document title={fullName}>
       <Page size="A4" style={styles.page}>
         {/* Sidebar */}
         <View style={{ ...styles.sidebar, backgroundColor: accentColor }}>
-          {personal.photoUrl && (
-            <Image src={personal.photoUrl} style={styles.photo} />
+          {personal?.photoUrl && (
+            <Image
+              src={personal.photoUrl}
+              style={styles.photo}
+            />
           )}
           <Text style={styles.name}>{fullName}</Text>
-          <Text style={styles.title}>{personal.title}</Text>
+          <Text style={styles.title}>{personal?.title || ""}</Text>
 
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarHeading}>Contact</Text>
-            <Text style={styles.contactItem}>{personal.location}</Text>
-            <Text style={styles.contactItem}>{personal.email}</Text>
-            <Text style={styles.contactItem}>{personal.mobile}</Text>
+            <Text style={styles.contactItem}>{personal?.location || ""}</Text>
+            <Text style={styles.contactItem}>{personal?.email || ""}</Text>
+            <Text style={styles.contactItem}>{personal?.mobile || ""}</Text>
           </View>
 
           {techSkills.length > 0 && (
@@ -195,7 +200,7 @@ const VerticalTemplate: React.FC<Props> = ({
         {/* Main Content */}
         <View style={styles.main}>
           <View style={{ marginBottom: 20 }}>
-            <Html {...htmlProps}>{personal.summary}</Html>
+            <Html {...htmlProps}>{personal?.summary || ""}</Html>
           </View>
 
           {professionalExperiences.length > 0 && (
@@ -261,4 +266,5 @@ const VerticalTemplate: React.FC<Props> = ({
   );
 };
 
-export default VerticalTemplate;
+export default memo(VerticalTemplate);
+
