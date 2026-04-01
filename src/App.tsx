@@ -225,7 +225,7 @@ function App() {
       {/* Main Content */}
       <main className="flex flex-1 overflow-hidden">
         {/* Editor Pane */}
-        <div className="w-[40%] flex flex-col border-r border-slate-700">
+        <div className="w-[40%] max-w-[600px] flex flex-col border-r border-slate-700">
           <div className="px-4 py-2 bg-slate-800 border-b border-slate-700 flex justify-between items-center">
             <div className="flex gap-4" data-tour="tour-mode-toggle">
               <button
