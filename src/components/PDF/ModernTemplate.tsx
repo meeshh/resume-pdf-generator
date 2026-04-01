@@ -318,7 +318,7 @@ const ModernTemplate: React.FC<Props> = ({ data, accentColor = "#5350a2" }) => {
                     <View style={{ flexDirection: "row", gap: 2 }}>
                       {Array.from({ length: 5 }).map((_, i) => (
                         <View
-                          key={`dot-${lang.language}-${Math.random()}`}
+                          key={i}
                           style={{
                             width: 5,
                             height: 5,

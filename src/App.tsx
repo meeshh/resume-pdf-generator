@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 import type React from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AIAssistant from "./components/AIAssistant";
 import FormEditor from "./components/FormEditor";
 import OnboardingTour from "./components/OnboardingTour";
@@ -74,7 +74,7 @@ const JSON_SCHEMA = `
 `;
 
 function App() {
-  const { data, jsonData, error, version, setData, setJsonData } =
+  const { data, jsonData, error, version, lastInteraction, setData, setJsonData } =
     useResumeStore();
   const [template, setTemplate] = useState<TemplateType>("modern");
   const [accentColor, setAccentColor] = useState<string>("#5350a2");
@@ -82,43 +82,63 @@ function App() {
   const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [editMode, setEditMode] = useState<"code" | "form">("form");
   const [refreshKey, setRefreshKey] = useState(0);
+  // Robust initialization
+  const [renderState, setRenderState] = useState<{data: ResumeData, remountKey: number}>(() => ({
+    data: useResumeStore.getState().data,
+    remountKey: 0
+  }));
 
-  // Custom debounce for PDF data to prevent laggy re-renders
-  const [debouncedData, setDebouncedData] = useState(data);
+  // Track structural versions to detect reorders vs text changes
+  const lastVersionRef = useRef(version);
+  const lastInteractionRef = useRef(lastInteraction);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedData(data);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [data]);
+    // 1. Detect if this is a structural change (reorder or AI import)
+    const isStructural = version !== lastVersionRef.current || lastInteraction !== lastInteractionRef.current;
+    
+    lastVersionRef.current = version;
+    lastInteractionRef.current = lastInteraction;
 
-  // Memoize the template selection to prevent unnecessary heavy calculations
+    if (isStructural) {
+      // For reorders, update instantly and force remount
+      setRenderState({
+        data: data,
+        remountKey: Date.now() // Use timestamp for unique remount
+      });
+      return;
+    }
+
+    // 2. For text changes, use a throttled update without remounting
+    const timer = setTimeout(() => {
+      setRenderState(prev => {
+        // Only update data, keep remountKey the same to avoid viewer flash
+        return {
+          ...prev,
+          data: data
+        };
+      });
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [data, version, lastInteraction]);
+
+  // Memoize the template selection
   const pdfDocument = useMemo(() => {
     switch (template) {
       case "modern":
-        return (
-          <ModernTemplate data={debouncedData} accentColor={accentColor} />
-        );
+        return <ModernTemplate data={renderState.data} accentColor={accentColor} />;
       case "minimal":
-        return (
-          <MinimalTemplate data={debouncedData} accentColor={accentColor} />
-        );
+        return <MinimalTemplate data={renderState.data} accentColor={accentColor} />;
       case "vertical":
-        return (
-          <VerticalTemplate data={debouncedData} accentColor={accentColor} />
-        );
+        return <VerticalTemplate data={renderState.data} accentColor={accentColor} />;
       case "executive":
-        return (
-          <ExecutiveTemplate data={debouncedData} accentColor={accentColor} />
-        );
+        return <ExecutiveTemplate data={renderState.data} accentColor={accentColor} />;
       case "ats":
-        return <ATSPDF data={debouncedData} />;
+        return <ATSPDF data={renderState.data} />;
       default:
-        return (
-          <ModernTemplate data={debouncedData} accentColor={accentColor} />
-        );
+        return <ModernTemplate data={renderState.data} accentColor={accentColor} />;
     }
-  }, [template, debouncedData, accentColor]);
+  }, [template, renderState.data, accentColor]);
 
   const handleRefresh = useCallback(() => {
     setRefreshKey((prev) => prev + 1);
@@ -432,12 +452,13 @@ function App() {
               data-color-mode="light"
             >
               <PDFViewer
-                key={`${template}-${JSON.stringify(debouncedData).length}-${refreshKey}-${version}-${debouncedData.personal?.photoUrl?.slice(-5)}`}
+                key={`${template}-${renderState.remountKey}-${refreshKey}-${renderState.data.personal?.photoUrl?.slice(-5)}`}
                 width="100%"
                 height="100%"
                 showToolbar={true}
                 className="border-none"
               >
+
                 {pdfDocument}
               </PDFViewer>
             </div>

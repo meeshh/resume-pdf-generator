@@ -7,6 +7,7 @@ interface ResumeStore {
   jsonData: string;
   error: string | null;
   version: number;
+  lastInteraction: number;
 
   // Actions
   setData: (data: ResumeData) => void;
@@ -95,6 +96,7 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
   jsonData: JSON.stringify(initialData, null, 2),
   error: null,
   version: 0,
+  lastInteraction: Date.now(),
 
   setData: (data) => {
     set((state) => ({
@@ -102,6 +104,7 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
       jsonData: JSON.stringify(data, null, 2),
       error: null,
       version: state.version + 1,
+      lastInteraction: Date.now(),
     }));
   },
 
@@ -113,6 +116,7 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
         data: parsed,
         error: null,
         version: state.version + 1,
+        lastInteraction: Date.now(),
       }));
     } catch (_e) {
       set({ jsonData, error: "Invalid JSON format" });
@@ -134,6 +138,7 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
       data: newData,
       jsonData: JSON.stringify(newData, null, 2),
       version: state.version + 1,
+      lastInteraction: Date.now(),
     }));
   },
 
@@ -155,6 +160,7 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
         data: newData,
         jsonData: JSON.stringify(newData, null, 2),
         version: version + 1,
+        lastInteraction: Date.now(),
       });
       console.log(`Successfully reordered ${fieldName}`);
     }

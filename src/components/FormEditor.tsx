@@ -11,6 +11,7 @@ import {
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
   SortableContext,
+  arrayMove,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
@@ -167,7 +168,7 @@ function FormEditorComponent() {
                   </label>
                   <input
                     id={field.name}
-                    value={field.state.value}
+                    value={field.state.value ?? ""}
                     autoComplete="off"
                     onChange={(e) => {
                       field.handleChange(e.target.value);
@@ -189,7 +190,7 @@ function FormEditorComponent() {
                   </label>
                   <input
                     id={field.name}
-                    value={field.state.value}
+                    value={field.state.value ?? ""}
                     autoComplete="off"
                     onChange={(e) => {
                       field.handleChange(e.target.value);
@@ -212,7 +213,7 @@ function FormEditorComponent() {
                 </label>
                 <input
                   id={field.name}
-                  value={field.state.value}
+                  value={field.state.value ?? ""}
                   autoComplete="off"
                   onChange={(e) => {
                     field.handleChange(e.target.value);
@@ -234,7 +235,7 @@ function FormEditorComponent() {
                 </label>
                 <textarea
                   id={field.name}
-                  value={field.state.value}
+                  value={field.state.value ?? ""}
                   autoComplete="off"
                   onChange={(e) => {
                     field.handleChange(e.target.value);
@@ -316,7 +317,7 @@ function FormEditorComponent() {
                             </label>
                             <input
                               id={field.name}
-                              value={field.state.value}
+                              value={field.state.value ?? ""}
                               autoComplete="off"
                               onChange={(e) => {
                                 field.handleChange(e.target.value);
@@ -340,7 +341,7 @@ function FormEditorComponent() {
                             </label>
                             <input
                               id={field.name}
-                              value={field.state.value}
+                              value={field.state.value ?? ""}
                               autoComplete="off"
                               onChange={(e) => {
                                 field.handleChange(e.target.value);
@@ -363,7 +364,7 @@ function FormEditorComponent() {
                           </label>
                           <textarea
                             id={field.name}
-                            value={field.state.value}
+                            value={field.state.value ?? ""}
                             autoComplete="off"
                             onChange={(e) => {
                               field.handleChange(e.target.value);
@@ -437,7 +438,7 @@ function FormEditorComponent() {
                         {(field) => (
                           <input
                             aria-label="Skill Name"
-                            value={field.state.value}
+                            value={field.state.value ?? ""}
                             autoComplete="off"
                             onChange={(e) => {
                               field.handleChange(e.target.value);
@@ -455,7 +456,7 @@ function FormEditorComponent() {
                               min="0"
                               max="100"
                               aria-label="Knowledge Level"
-                              value={field.state.value}
+                              value={field.state.value ?? 0}
                               onChange={(e) => {
                                 field.handleChange(Number(e.target.value));
                                 handleUpdate();
@@ -463,7 +464,7 @@ function FormEditorComponent() {
                               className="flex-1 accent-purple-500 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
                             />
                             <span className="text-[10px] font-mono text-slate-500 w-6 text-right">
-                              {field.state.value}%
+                              {field.state.value ?? 0}%
                             </span>
                           </div>
                         )}
@@ -520,41 +521,111 @@ function FormEditorComponent() {
             >
               <div className="space-y-4">
                 {data.educations.map((edu, i) => (
-                  <SortableItem
-                    key={edu.id}
-                    id={edu.id}
-                    onRemove={() =>
-                      setData({
-                        ...data,
-                        educations: data.educations.filter(
-                          (item) => item.id !== edu.id,
-                        ),
-                      })
-                    }
-                  >
-                    <form.Field name={`educations[${i}].degree`}>
-                      {(field) => (
-                        <div className="space-y-1">
-                          <label
-                            htmlFor={field.name}
-                            className="text-[10px] font-bold text-slate-600 uppercase"
-                          >
-                            Degree
-                          </label>
-                          <input
-                            id={field.name}
-                            value={field.state.value}
-                            autoComplete="off"
-                            onChange={(e) => {
-                              field.handleChange(e.target.value);
-                              handleUpdate();
-                            }}
-                            className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
-                          />
+                    <SortableItem
+                      key={edu.id}
+                      id={edu.id}
+                      onRemove={() =>
+                        setData({
+                          ...data,
+                          educations: data.educations.filter(
+                            (item) => item.id !== edu.id,
+                          ),
+                        })
+                      }
+                    >
+                      <form.Field name={`educations[${i}].degree`}>
+                        {(field) => (
+                          <div className="space-y-1">
+                            <label
+                              htmlFor={field.name}
+                              className="text-[10px] font-bold text-slate-600 uppercase"
+                            >
+                              Degree
+                            </label>
+                            <input
+                              id={field.name}
+                              value={field.state.value ?? ""}
+                              autoComplete="off"
+                              onChange={(e) => {
+                                field.handleChange(e.target.value);
+                                handleUpdate();
+                              }}
+                              className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
+                            />
+                          </div>
+                        )}
+                      </form.Field>
+                      <div className="grid grid-cols-2 gap-4">
+                        <form.Field name={`educations[${i}].organization`}>
+                          {(field) => (
+                            <div className="space-y-1">
+                              <label
+                                htmlFor={field.name}
+                                className="text-[10px] font-bold text-slate-600 uppercase"
+                              >
+                                Organization
+                              </label>
+                              <input
+                                id={field.name}
+                                value={field.state.value ?? ""}
+                                autoComplete="off"
+                                onChange={(e) => {
+                                  field.handleChange(e.target.value);
+                                  handleUpdate();
+                                }}
+                                className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
+                              />
+                            </div>
+                          )}
+                        </form.Field>
+                        <div className="grid grid-cols-2 gap-2">
+                          <form.Field name={`educations[${i}].startYear`}>
+                            {(field) => (
+                              <div className="space-y-1">
+                                <label
+                                  htmlFor={field.name}
+                                  className="text-[10px] font-bold text-slate-600 uppercase"
+                                >
+                                  Start
+                                </label>
+                                <input
+                                  id={field.name}
+                                  value={field.state.value ?? ""}
+                                  autoComplete="off"
+                                  onChange={(e) => {
+                                    field.handleChange(e.target.value);
+                                    handleUpdate();
+                                  }}
+                                  className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
+                                />
+                              </div>
+                            )}
+                          </form.Field>
+                          <form.Field name={`educations[${i}].endYear`}>
+                            {(field) => (
+                              <div className="space-y-1">
+                                <label
+                                  htmlFor={field.name}
+                                  className="text-[10px] font-bold text-slate-600 uppercase"
+                                >
+                                  End
+                                </label>
+                                <input
+                                  id={field.name}
+                                  value={field.state.value ?? ""}
+                                  autoComplete="off"
+                                  onChange={(e) => {
+                                    field.handleChange(e.target.value);
+                                    handleUpdate();
+                                  }}
+                                  className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
+                                />
+                              </div>
+                            )}
+                          </form.Field>
                         </div>
-                      )}
-                    </form.Field>
-                  </SortableItem>
+                      </div>
+                    </SortableItem>
                 ))}
               </div>
             </SortableContext>
@@ -617,7 +688,7 @@ function FormEditorComponent() {
                         {(field) => (
                           <input
                             aria-label="Language Name"
-                            value={field.state.value}
+                            value={field.state.value ?? ""}
                             autoComplete="off"
                             onChange={(e) => {
                               field.handleChange(e.target.value);
@@ -632,7 +703,7 @@ function FormEditorComponent() {
                           <div className="flex items-center gap-3 w-1/3">
                             <select
                               aria-label="Language Level"
-                              value={field.state.value}
+                              value={field.state.value ?? 1}
                               onChange={(e) => {
                                 field.handleChange(Number(e.target.value));
                                 handleUpdate();
