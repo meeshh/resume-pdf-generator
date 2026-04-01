@@ -286,15 +286,15 @@ const ModernTemplate: React.FC<Props> = ({ data, accentColor = "#5350a2" }) => {
                 </Text>
                 {educations.map((edu) => (
                   <View key={edu.id} style={styles.educationItem}>
+                    <Text style={styles.educationDegree}>{edu.degree}</Text>
                     <View style={styles.itemHeader}>
-                      <Text style={styles.educationDegree}>{edu.degree}</Text>
+                      <Text style={styles.educationOrg}>{edu.organization}</Text>
                       <Text style={styles.educationDate}>
                         {edu.startYear}
                         {edu.startYear && edu.endYear ? " - " : ""}
                         {edu.endYear}
                       </Text>
                     </View>
-                    <Text style={styles.educationOrg}>{edu.organization}</Text>
                   </View>
                 ))}
               </View>

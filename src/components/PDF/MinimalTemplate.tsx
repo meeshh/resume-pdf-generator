@@ -106,8 +106,10 @@ const styles = StyleSheet.create({
   skillItem: {
     backgroundColor: "#f3f4f6",
     paddingHorizontal: 6,
-    paddingVertical: 2,
+    paddingVertical: 1,
     borderRadius: 2,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
