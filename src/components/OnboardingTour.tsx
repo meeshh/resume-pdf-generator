@@ -20,15 +20,22 @@ const steps: Step[] = [
     target: "tour-ai",
     title: "Magic AI Builder",
     content:
-      "Don't waste time typing! Use our Magic AI button to turn your existing resume or LinkedIn profile into a professional format in seconds using ChatGPT or Gemini.",
+      "THE HIGHLIGHT: Don't waste time typing! Use our Magic AI button to turn your existing resume or LinkedIn profile into a professional format in seconds using ChatGPT or Gemini.",
     position: "bottom",
   },
   {
     target: "tour-editor",
-    title: "Easy Data Editor",
+    title: "Visual Form Editor",
     content:
-      "This is where your resume details are stored. You can type directly here to make quick changes to your name, job titles, or dates.",
+      "Use this user-friendly form to edit your details. You can drag and drop items to reorder them, and everything syncs instantly with the preview.",
     position: "right",
+  },
+  {
+    target: "tour-mode-toggle",
+    title: "Switch to Code",
+    content:
+      "Prefer working with JSON? Toggle between the Visual Form and the raw Source Code at any time. Both views stay in perfect sync.",
+    position: "bottom",
   },
   {
     target: "tour-templates",
@@ -41,7 +48,7 @@ const steps: Step[] = [
     target: "tour-preview",
     title: "Preview & Print",
     content:
-      "See exactly what your resume will look like. Use the toolbar at the top of the page to download your finished PDF and start applying!",
+      "See exactly what your resume will look like. Use the toolbar at the top of the page to download your finished PDF or MS Word file.",
     position: "left",
   },
 ];
@@ -72,7 +79,7 @@ const OnboardingTour: React.FC = () => {
   }, [currentStep]);
 
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem("resumint-tour-seen");
+    const hasSeenTour = localStorage.getItem("resumint-tour-v2");
     if (!hasSeenTour) {
       setIsOpen(true);
     }
@@ -101,7 +108,7 @@ const OnboardingTour: React.FC = () => {
   };
 
   const completeTour = () => {
-    localStorage.setItem("resumint-tour-seen", "true");
+    localStorage.setItem("resumint-tour-v2", "true");
     setIsOpen(false);
   };
 
@@ -112,17 +119,39 @@ const OnboardingTour: React.FC = () => {
   // Tooltip positioning logic
   const getTooltipStyle = () => {
     const gap = 12;
+    const tooltipWidth = 320;
+    const windowMargin = 12;
+
     switch (step.position) {
-      case "bottom":
+      case "bottom": {
+        // Try to center, but cap to screen edges
+        let left = coords.left + coords.width / 2 - tooltipWidth / 2;
+        // If near left edge (like the mode-toggle tabs), align with target's left
+        if (left < windowMargin) left = coords.left;
+        // Ensure it doesn't go past right edge
+        left = Math.min(
+          left,
+          window.innerWidth - tooltipWidth - windowMargin,
+        );
+        // Ensure it doesn't go past left edge
+        left = Math.max(left, windowMargin);
+
         return {
           top: coords.top + coords.height + gap,
-          left: coords.left + coords.width / 2 - 150,
+          left,
         };
-      case "top":
+      }
+      case "top": {
+        let left = coords.left + coords.width / 2 - tooltipWidth / 2;
+        left = Math.max(
+          windowMargin,
+          Math.min(left, window.innerWidth - tooltipWidth - windowMargin),
+        );
         return {
           top: coords.top - 200 - gap,
-          left: coords.left + coords.width / 2 - 150,
+          left,
         };
+      }
       case "right":
         return {
           top: coords.top + coords.height / 2 - 100,
@@ -131,7 +160,7 @@ const OnboardingTour: React.FC = () => {
       case "left":
         return {
           top: coords.top + coords.height / 2 - 100,
-          left: coords.left - 300 - gap,
+          left: coords.left - tooltipWidth - gap,
         };
       default:
         return { top: 0, left: 0 };

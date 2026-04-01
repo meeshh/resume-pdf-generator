@@ -22,6 +22,7 @@ import MinimalTemplate from "./components/PDF/MinimalTemplate";
 import ModernTemplate from "./components/PDF/ModernTemplate";
 import VerticalTemplate from "./components/PDF/VerticalTemplate";
 import { useResumeStore } from "./store/useResumeStore";
+import type { ResumeData } from "./types/ResumeData";
 import { generateWordResume } from "./utils/wordGenerator";
 
 type TemplateType = "modern" | "minimal" | "vertical" | "executive" | "ats";
@@ -226,7 +227,7 @@ function App() {
         {/* Editor Pane */}
         <div className="w-[40%] flex flex-col border-r border-slate-700">
           <div className="px-4 py-2 bg-slate-800 border-b border-slate-700 flex justify-between items-center">
-            <div className="flex gap-4">
+            <div className="flex gap-4" data-tour="tour-mode-toggle">
               <button
                 type="button"
                 onClick={() => setEditMode("form")}

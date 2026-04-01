@@ -11,7 +11,6 @@ import {
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
   SortableContext,
-  arrayMove,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
