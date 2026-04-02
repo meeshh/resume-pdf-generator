@@ -1,26 +1,26 @@
 # ResuMint: Feature Roadmap & Ideas
 
-## 🎨 Visual Form Editor (Priority)
+## ✅ Visual Form Editor (Completed)
 - **Goal:** Provide a user-friendly interface for non-technical users to edit their resume without touching JSON.
 - **Tech:** TanStack Form (`@tanstack/react-form`).
-- **Features:** 
-    - Real-time sync between Form and JSON Editor.
-    - Field validation (email, phone, etc.).
-    - Dynamic arrays for adding/removing experiences and skills.
 
-## 🤖 AI Job-Tailoring
-- **Goal:** Automatically optimize the resume for a specific job.
+## ✅ AI Job-Tailoring (Completed)
+- **Goal:** Automatically optimize the resume for a specific job or from raw text.
 - **Features:**
-    - Input field for Job Descriptions.
-    - AI-driven summary rewriting.
-    - Keyword highlighting and gap analysis.
+    - Optional direct API integration (OpenAI/Gemini).
+    - Prompt generator for manual use.
 
-## 💾 Local Persistence
-- **Goal:** Prevent data loss during browser sessions.
+## ✅ Local Persistence & Versions (Completed)
+- **Goal:** Prevent data loss and manage multiple resumes.
 - **Features:**
-    - Auto-save to `localStorage`.
-    - "Last saved" timestamp indicator.
-    - Clear data / Reset to default option.
+    - Multi-version storage in IndexedDB.
+    - Save/Load/Rename/Delete resume versions.
+
+## ✅ Undo/Redo System (Completed)
+- **Goal:** Safety net for edits.
+- **Features:**
+    - Full state history with 50-step limit.
+    - Keyboard shortcuts (Ctrl+Z / Ctrl+Y).
 
 ## 📏 Layout & Typography Controls
 - **Goal:** Fine-tune the visual output without editing code.

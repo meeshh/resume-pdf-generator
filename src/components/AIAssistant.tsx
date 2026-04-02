@@ -6,10 +6,13 @@ import {
   Trash2,
   Upload,
   X,
+  Loader2,
+  Zap
 } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useResumeStore } from "../store/useResumeStore";
+import { optimizeResume, getAIConfig, type AIProviderConfig } from "../utils/aiService";
 
 interface AIAssistantProps {
   isOpen: boolean;
@@ -78,6 +81,14 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ isOpen, onClose }) => {
   const [rawText, setRawText] = useState("");
   const [pastedJson, setPastedJson] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isOptimizing, setIsOptimizing] = useState(false);
+  const [aiConfig, setAiConfig] = useState<AIProviderConfig>(getAIConfig());
+
+  useEffect(() => {
+    if (isOpen) {
+      setAiConfig(getAIConfig());
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -110,8 +121,35 @@ ${rawText || "No data provided yet."}
     const url =
       platform === "chatgpt"
         ? `https://chatgpt.com/?q=${prompt}`
-        : `https://gemini.google.com/app?prompt=${prompt}`;
+        : `https://gemini.google.com/app`;
     window.open(url, "_blank");
+  };
+
+  const handleAIDirect = async (provider: "openai" | "gemini") => {
+    if (!rawText.trim()) {
+      setError("Please paste some source info first.");
+      return;
+    }
+
+    setIsOptimizing(true);
+    setError(null);
+    try {
+      const optimizedData = await optimizeResume(
+        rawText,
+        JSON_SCHEMA,
+        data.labels,
+        provider
+      );
+      setData(optimizedData);
+      setRawText("");
+      setPastedJson("");
+      setError(null);
+      onClose();
+    } catch (e: any) {
+      setError(e.message || "AI optimization failed. Please try again or use manual import.");
+    } finally {
+      setIsOptimizing(false);
+    }
   };
 
   const handleImport = () => {
@@ -138,27 +176,27 @@ ${rawText || "No data provided yet."}
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-100 flex items-center justify-center p-4 sm:p-8">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-100 flex items-center justify-center p-4 sm:p-8">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl w-full max-w-4xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] transition-colors">
         {/* Header */}
-        <div className="px-6 py-5 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
+        <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
           <div className="flex items-center gap-3">
             <div className="bg-blue-500/20 p-2 rounded-xl">
-              <Bot size={24} className="text-blue-400" />
+              <Bot size={24} className="text-blue-500 dark:text-blue-400" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
                 AI Resume Assistant
               </h2>
-              <p className="text-xs text-slate-400 font-medium">
-                No token needed • Use your own free AI account
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Optional Direct API Support • Use your own keys
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 hover:bg-slate-700 rounded-full transition-colors text-slate-400 hover:text-white"
+            className="p-2 enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 rounded-full transition-colors text-slate-500 dark:text-slate-400 enabled:hover:text-slate-900 dark:enabled:hover:text-white cursor-pointer"
           >
             <X size={20} />
           </button>
@@ -168,7 +206,7 @@ ${rawText || "No data provided yet."}
         <div className="flex-1 overflow-y-auto p-6 flex flex-col lg:flex-row gap-8">
           {/* Step 1: Input */}
           <div className="flex-1 flex flex-col gap-4">
-            <div className="flex items-center gap-2 text-blue-400 mb-1">
+            <div className="flex items-center gap-2 text-blue-500 dark:text-blue-400 mb-1">
               <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-[10px] font-black">
                 1
               </div>
@@ -181,53 +219,87 @@ ${rawText || "No data provided yet."}
                 value={rawText}
                 onChange={(e) => setRawText(e.target.value)}
                 placeholder="Paste your current resume, LinkedIn profile text, or just describe your experience..."
-                className="w-full h-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-slate-200 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all resize-none"
+                className="w-full h-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-4 text-slate-800 dark:text-slate-200 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all resize-none"
               />
               {rawText && (
                 <button
                   type="button"
                   onClick={() => setRawText("")}
-                  className="absolute top-2 right-2 p-1.5 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-lg transition-all"
+                  className="absolute top-2 right-2 p-1.5 bg-slate-100 dark:bg-slate-800 enabled:hover:bg-red-500/10 dark:enabled:hover:bg-red-500/20 text-slate-500 dark:text-slate-400 enabled:hover:text-red-600 dark:enabled:hover:text-red-400 rounded-lg transition-all cursor-pointer"
                 >
                   <Trash2 size={14} />
                 </button>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mt-2">
+            <div className="space-y-3 mt-2">
+              {/* Direct API Buttons */}
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleAIDirect("openai")}
+                  disabled={!aiConfig.openaiKey || isOptimizing}
+                  className="group relative flex items-center justify-center gap-2 bg-emerald-600 enabled:hover:bg-emerald-500 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:opacity-50 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg active:scale-95 enabled:cursor-pointer disabled:cursor-not-allowed"
+                >
+                  {isOptimizing ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <Zap size={14} className={aiConfig.openaiKey ? "text-yellow-300" : ""} />
+                  )}
+                  {aiConfig.openaiKey ? "DIRECT OPTIMIZE (GPT)" : "NO GPT KEY"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleAIDirect("gemini")}
+                  disabled={!aiConfig.geminiKey || isOptimizing}
+                  className="group relative flex items-center justify-center gap-2 bg-blue-600 enabled:hover:bg-blue-500 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:opacity-50 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg active:scale-95 enabled:cursor-pointer disabled:cursor-not-allowed"
+                >
+                  {isOptimizing ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <Zap size={14} className={aiConfig.geminiKey ? "text-yellow-300" : ""} />
+                  )}
+                  {aiConfig.geminiKey ? "DIRECT OPTIMIZE (GEMINI)" : "NO GEMINI KEY"}
+                </button>
+              </div>
+
+              {/* Manual Browser Buttons */}
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => openAI("chatgpt")}
+                  className="flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800 enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 text-emerald-600 dark:text-emerald-400 border border-slate-200 dark:border-slate-700 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                >
+                  <ExternalLink size={14} />
+                  OPEN CHATGPT
+                </button>
+                <button
+                  type="button"
+                  onClick={() => openAI("gemini")}
+                  className="flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800 enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 text-blue-600 dark:text-blue-400 border border-slate-200 dark:border-slate-700 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                >
+                  <Sparkles size={14} />
+                  OPEN GEMINI
+                </button>
+              </div>
+
               <button
                 type="button"
-                onClick={() => openAI("chatgpt")}
-                className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg active:scale-95"
+                onClick={copyPrompt}
+                className="w-full flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-700 enabled:hover:bg-slate-200 dark:enabled:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2.5 rounded-xl text-xs font-bold transition-all border border-slate-300 dark:border-slate-600 cursor-pointer"
               >
-                <ExternalLink size={14} />
-                OPEN CHATGPT
-              </button>
-              <button
-                type="button"
-                onClick={() => openAI("gemini")}
-                className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg active:scale-95"
-              >
-                <Sparkles size={14} />
-                OPEN GEMINI
+                <Copy size={14} />
+                COPY PROMPT
               </button>
             </div>
-            <button
-              type="button"
-              onClick={copyPrompt}
-              className="flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 text-slate-200 py-2.5 rounded-xl text-xs font-bold transition-all border border-slate-600"
-            >
-              <Copy size={14} />
-              COPY PROMPT INSTEAD
-            </button>
           </div>
 
           {/* Divider for Desktop */}
-          <div className="hidden lg:block w-px bg-slate-800 self-stretch" />
+          <div className="hidden lg:block w-px bg-slate-200 dark:bg-slate-800 self-stretch" />
 
           {/* Step 2: Result */}
           <div className="flex-1 flex flex-col gap-4">
-            <div className="flex items-center gap-2 text-purple-400 mb-1">
+            <div className="flex items-center gap-2 text-purple-500 dark:text-purple-400 mb-1">
               <div className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-[10px] font-black">
                 2
               </div>
@@ -243,10 +315,10 @@ ${rawText || "No data provided yet."}
                   setError(null);
                 }}
                 placeholder="Paste the JSON code block from AI here..."
-                className={`w-full h-full bg-slate-950 border ${error ? "border-red-500/50" : "border-slate-700"} rounded-xl p-4 text-blue-400 font-mono text-xs focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all resize-none`}
+                className={`w-full h-full bg-white dark:bg-slate-950 border ${error ? "border-red-500/50" : "border-slate-200 dark:border-slate-700"} rounded-xl p-4 text-blue-600 dark:text-blue-400 font-mono text-xs focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all resize-none`}
               />
               {error && (
-                <div className="absolute bottom-2 left-2 right-2 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-lg text-[10px] text-red-400 font-bold animate-pulse">
+                <div className="absolute bottom-2 left-2 right-2 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-lg text-[10px] text-red-600 dark:text-red-400 font-bold animate-pulse">
                   {error}
                 </div>
               )}
@@ -255,15 +327,15 @@ ${rawText || "No data provided yet."}
             <button
               type="button"
               onClick={handleImport}
-              disabled={!pastedJson.trim()}
-              className="flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-500 disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-black transition-all shadow-xl active:scale-95 mt-2"
+              disabled={!pastedJson.trim() || isOptimizing}
+              className="flex items-center justify-center gap-2 bg-purple-600 enabled:hover:bg-purple-500 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-600 disabled:opacity-50 text-white py-3 rounded-xl text-sm font-black transition-all shadow-xl active:scale-95 mt-2 enabled:cursor-pointer disabled:cursor-not-allowed"
             >
               <Upload size={18} />
               UPDATE RESUME DATA
             </button>
-            <p className="text-[10px] text-slate-500 text-center leading-relaxed italic">
-              This will replace your current editor content with the new data.
-              You can always undo in the editor if needed.
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center leading-relaxed italic">
+              AI direct optimization will replace your current data automatically. 
+              Manual paste requires clicking "Update Resume Data".
             </p>
           </div>
         </div>

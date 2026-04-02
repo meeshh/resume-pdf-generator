@@ -1,5 +1,6 @@
 import { arrayMove } from "@dnd-kit/sortable";
 import { create } from "zustand";
+import { temporal } from "zundo";
 import type { ResumeData } from "../types/ResumeData";
 
 interface ResumeStore {
@@ -8,6 +9,7 @@ interface ResumeStore {
   error: string | null;
   version: number;
   lastInteraction: number;
+  versionId: string | null; // Track which version from IndexedDB is loaded
 
   // Actions
   setData: (data: ResumeData) => void;
@@ -18,6 +20,7 @@ interface ResumeStore {
     activeId: string,
     overId: string,
   ) => void;
+  setVersionId: (id: string | null) => void;
 }
 
 const initialData: ResumeData = {
@@ -91,78 +94,90 @@ const initialData: ResumeData = {
   ],
 };
 
-export const useResumeStore = create<ResumeStore>((set, get) => ({
-  data: initialData,
-  jsonData: JSON.stringify(initialData, null, 2),
-  error: null,
-  version: 0,
-  lastInteraction: Date.now(),
-
-  setData: (data) => {
-    set((state) => ({
-      data,
-      jsonData: JSON.stringify(data, null, 2),
+export const useResumeStore = create<ResumeStore>()(
+  temporal(
+    (set, get) => ({
+      data: initialData,
+      jsonData: JSON.stringify(initialData, null, 2),
       error: null,
-      version: state.version + 1,
+      version: 0,
       lastInteraction: Date.now(),
-    }));
-  },
+      versionId: null,
 
-  setJsonData: (jsonData) => {
-    try {
-      const parsed = JSON.parse(jsonData);
-      set((state) => ({
-        jsonData,
-        data: parsed,
-        error: null,
-        version: state.version + 1,
-        lastInteraction: Date.now(),
-      }));
-    } catch (_e) {
-      set({ jsonData, error: "Invalid JSON format" });
-    }
-  },
+      setData: (data) => {
+        set((state) => ({
+          data,
+          jsonData: JSON.stringify(data, null, 2),
+          error: null,
+          version: state.version + 1,
+          lastInteraction: Date.now(),
+        }));
+      },
 
-  updateField: (path, value) => {
-    const newData = { ...get().data };
-    const parts = path.split(".");
-    // biome-ignore lint/suspicious/noExplicitAny: Deep path updates with dynamic keys require any for traversal
-    let current: any = newData;
+      setJsonData: (jsonData) => {
+        try {
+          const parsed = JSON.parse(jsonData);
+          set((state) => ({
+            jsonData,
+            data: parsed,
+            error: null,
+            version: state.version + 1,
+            lastInteraction: Date.now(),
+          }));
+        } catch (_e) {
+          set({ jsonData, error: "Invalid JSON format" });
+        }
+      },
 
-    for (let i = 0; i < parts.length - 1; i++) {
-      current = { ...current[parts[i]] };
-    }
-    current[parts[parts.length - 1]] = value;
+      updateField: (path, value) => {
+        const newData = { ...get().data };
+        const parts = path.split(".");
+        // biome-ignore lint/suspicious/noExplicitAny: Deep path updates with dynamic keys require any for traversal
+        let current: any = newData;
 
-    set((state) => ({
-      data: newData,
-      jsonData: JSON.stringify(newData, null, 2),
-      version: state.version + 1,
-      lastInteraction: Date.now(),
-    }));
-  },
+        for (let i = 0; i < parts.length - 1; i++) {
+          current = { ...current[parts[i]] };
+        }
+        current[parts[parts.length - 1]] = value;
 
-  reorderArray: (fieldName, activeId, overId) => {
-    const { data, version } = get();
-    const fieldValue = data[fieldName];
-    if (!Array.isArray(fieldValue)) return;
+        set((state) => ({
+          data: newData,
+          jsonData: JSON.stringify(newData, null, 2),
+          version: state.version + 1,
+          lastInteraction: Date.now(),
+        }));
+      },
 
-    const items = [...fieldValue] as Array<{ id: string }>;
-    if (!items) return;
+      reorderArray: (fieldName, activeId, overId) => {
+        const { data, version } = get();
+        const fieldValue = data[fieldName];
+        if (!Array.isArray(fieldValue)) return;
 
-    const oldIndex = items.findIndex((item) => item.id === activeId);
-    const newIndex = items.findIndex((item) => item.id === overId);
+        const items = [...fieldValue] as Array<{ id: string }>;
+        if (!items) return;
 
-    if (oldIndex !== -1 && newIndex !== -1) {
-      const newItems = arrayMove(items, oldIndex, newIndex);
-      const newData = { ...data, [fieldName]: newItems };
-      set({
-        data: newData,
-        jsonData: JSON.stringify(newData, null, 2),
-        version: version + 1,
-        lastInteraction: Date.now(),
-      });
-      console.log(`Successfully reordered ${fieldName}`);
-    }
-  },
-}));
+        const oldIndex = items.findIndex((item) => item.id === activeId);
+        const newIndex = items.findIndex((item) => item.id === overId);
+
+        if (oldIndex !== -1 && newIndex !== -1) {
+          const newItems = arrayMove(items, oldIndex, newIndex);
+          const newData = { ...data, [fieldName]: newItems };
+          set({
+            data: newData,
+            jsonData: JSON.stringify(newData, null, 2),
+            version: version + 1,
+            lastInteraction: Date.now(),
+          });
+          console.log(`Successfully reordered ${fieldName}`);
+        }
+      },
+
+      setVersionId: (id) => set({ versionId: id }),
+    }),
+    {
+      limit: 50, // Keep last 50 changes
+      partialize: (state) => ({ data: state.data }), // Only track 'data' for undo/redo
+    },
+  ),
+);
+

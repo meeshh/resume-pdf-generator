@@ -1467,6 +1467,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"idb-keyval@npm:^6.2.2":
+  version: 6.2.2
+  resolution: "idb-keyval@npm:6.2.2"
+  checksum: 10c0/b52f0d2937cc2ec9f1da536b0b5c0875af3043ca210714beaffead4ec1f44f2ad322220305fd024596203855224d9e3523aed83e971dfb62ddc21b5b1721aeef
+  languageName: node
+  linkType: hard
+
 "immediate@npm:~3.0.5":
   version: 3.0.6
   resolution: "immediate@npm:3.0.6"
@@ -2151,6 +2158,7 @@ __metadata:
     autoprefixer: "npm:^10.4.27"
     docx: "npm:^9.6.1"
     file-saver: "npm:^2.0.5"
+    idb-keyval: "npm:^6.2.2"
     lucide-react: "npm:^1.7.0"
     postcss: "npm:^8.5.8"
     react: "npm:^19.2.4"
@@ -2159,6 +2167,7 @@ __metadata:
     tailwindcss: "npm:^4.2.2"
     typescript: "npm:~5.9.3"
     vite: "npm:^8.0.1"
+    zundo: "npm:^2.3.0"
     zustand: "npm:^5.0.12"
   languageName: unknown
   linkType: soft
@@ -2621,6 +2630,18 @@ __metadata:
   version: 3.2.1
   resolution: "yoga-layout@npm:3.2.1"
   checksum: 10c0/9001e51be993c85e03757e5a04a2b61b8b30c9e5a7865d0156ca87a6431a3b717d51eb4990bfe588189fcfeac688dd9c3de707bbd50d1c344a84e63974cc54a8
+  languageName: node
+  linkType: hard
+
+"zundo@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "zundo@npm:2.3.0"
+  peerDependencies:
+    zustand: ^4.3.0 || ^5.0.0
+  peerDependenciesMeta:
+    zustand:
+      optional: false
+  checksum: 10c0/673d13570b1029830a7ace37b7946c6d878a6493c565727351bd5791f6e46e4b25eb132f96985137bc3f0aa3c7f69093ef87ea2bfb4aa5805b0eb804e8eaa916
   languageName: node
   linkType: hard
 

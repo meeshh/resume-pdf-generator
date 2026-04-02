@@ -66,7 +66,7 @@ function SortableItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group bg-slate-950/50 border border-slate-800 rounded-xl p-4 transition-colors hover:border-slate-700 ${isDragging ? "opacity-50 ring-2 ring-blue-500/20 shadow-2xl z-50" : "opacity-100"} ${className}`}
+      className={`group bg-white dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl p-4 transition-colors hover:border-slate-300 dark:hover:border-slate-700 ${isDragging ? "opacity-50 ring-2 ring-blue-500/20 shadow-2xl z-50" : "opacity-100"} ${className}`}
     >
       <div className="flex gap-4">
         {/* Handle */}
@@ -74,7 +74,7 @@ function SortableItem({
           ref={setActivatorNodeRef}
           {...attributes}
           {...listeners}
-          className="cursor-grab active:cursor-grabbing text-slate-700 hover:text-slate-400 p-1 flex items-center touch-none"
+          className="cursor-grab active:cursor-grabbing text-slate-400 dark:text-slate-700 hover:text-slate-600 dark:hover:text-slate-400 p-1 flex items-center touch-none transition-colors"
         >
           <GripVertical size={18} />
         </div>
@@ -85,7 +85,7 @@ function SortableItem({
         <button
           type="button"
           onClick={onRemove}
-          className="text-slate-700 hover:text-red-500 transition-colors p-1 self-start cursor-pointer"
+          className="text-slate-400 dark:text-slate-700 hover:text-red-500 transition-colors p-1 self-start cursor-pointer"
         >
           <Trash2 size={18} />
         </button>
@@ -104,9 +104,16 @@ function FormEditorComponent() {
     },
   });
 
-  // Sync form when store data changes (e.g. from Source Code or AI)
+  // Sync form when store data changes (e.g. from Source Code, AI, or Undo/Redo)
   useEffect(() => {
-    form.update({ defaultValues: data });
+    // Check if form values actually differ from store data before resetting
+    // to avoid unnecessary re-renders and potential cursor jumps
+    const currentValues = JSON.stringify(form.state.values);
+    const storeValues = JSON.stringify(data);
+    
+    if (currentValues !== storeValues) {
+      form.reset({ defaultValues: data });
+    }
   }, [data, form]);
 
   const sensors = useSensors(
@@ -138,7 +145,7 @@ function FormEditorComponent() {
   };
 
   return (
-    <div className="h-full overflow-y-auto bg-slate-900 text-slate-200 p-6 space-y-8 custom-scrollbar pb-32">
+    <div className="h-full overflow-y-auto bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 p-6 space-y-8 custom-scrollbar pb-32 transition-colors">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -149,7 +156,7 @@ function FormEditorComponent() {
       >
         {/* Personal Info Section */}
         <section className="space-y-4">
-          <div className="flex items-center gap-2 text-blue-400 border-b border-slate-800 pb-2">
+          <div className="flex items-center gap-2 text-blue-500 dark:text-blue-400 border-b border-slate-200 dark:border-slate-800 pb-2">
             <User size={18} />
             <h3 className="font-black text-xs uppercase tracking-widest">
               Personal Information
@@ -161,7 +168,7 @@ function FormEditorComponent() {
                 <div className="space-y-1">
                   <label
                     htmlFor={field.name}
-                    className="text-[10px] font-bold text-slate-500 uppercase"
+                    className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase"
                   >
                     First Name
                   </label>
@@ -173,7 +180,7 @@ function FormEditorComponent() {
                       field.handleChange(e.target.value);
                       handleUpdate();
                     }}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none transition-all"
+                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none transition-all"
                   />
                 </div>
               )}
@@ -183,7 +190,7 @@ function FormEditorComponent() {
                 <div className="space-y-1">
                   <label
                     htmlFor={field.name}
-                    className="text-[10px] font-bold text-slate-500 uppercase"
+                    className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase"
                   >
                     Last Name
                   </label>
@@ -195,7 +202,7 @@ function FormEditorComponent() {
                       field.handleChange(e.target.value);
                       handleUpdate();
                     }}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none transition-all"
+                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none transition-all"
                   />
                 </div>
               )}
@@ -206,7 +213,7 @@ function FormEditorComponent() {
               <div className="space-y-1">
                 <label
                   htmlFor={field.name}
-                  className="text-[10px] font-bold text-slate-500 uppercase"
+                  className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase"
                 >
                   Professional Title
                 </label>
@@ -218,7 +225,7 @@ function FormEditorComponent() {
                     field.handleChange(e.target.value);
                     handleUpdate();
                   }}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none transition-all"
+                  className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none transition-all"
                 />
               </div>
             )}
@@ -228,7 +235,7 @@ function FormEditorComponent() {
               <div className="space-y-1">
                 <label
                   htmlFor={field.name}
-                  className="text-[10px] font-bold text-slate-500 uppercase"
+                  className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase"
                 >
                   Summary (HTML supported)
                 </label>
@@ -240,7 +247,7 @@ function FormEditorComponent() {
                     field.handleChange(e.target.value);
                     handleUpdate();
                   }}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none transition-all min-h-[100px] resize-y"
+                  className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none transition-all min-h-[100px] resize-y"
                 />
               </div>
             )}
@@ -249,8 +256,8 @@ function FormEditorComponent() {
 
         {/* Experience Section */}
         <section className="space-y-4 pt-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-            <div className="flex items-center gap-2 text-emerald-400">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+            <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400">
               <Briefcase size={18} />
               <h3 className="font-black text-xs uppercase tracking-widest">
                 Work Experience
@@ -272,7 +279,7 @@ function FormEditorComponent() {
                 ];
                 setData({ ...data, professionalExperiences: newItems });
               }}
-              className="cursor-pointer flex items-center gap-1 bg-emerald-600/20 text-emerald-400 px-2 py-1 rounded text-[10px] font-bold hover:bg-emerald-600/30 transition-colors"
+              className="cursor-pointer flex items-center gap-1 bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded text-[10px] font-bold hover:bg-emerald-600/30 transition-colors"
             >
               <Plus size={12} /> ADD
             </button>
@@ -310,7 +317,7 @@ function FormEditorComponent() {
                           <div className="space-y-1">
                             <label
                               htmlFor={field.name}
-                              className="text-[10px] font-bold text-slate-600 uppercase"
+                              className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
                             >
                               Job Title
                             </label>
@@ -322,7 +329,7 @@ function FormEditorComponent() {
                                 field.handleChange(e.target.value);
                                 handleUpdate();
                               }}
-                              className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
                             />
                           </div>
                         )}
@@ -334,7 +341,7 @@ function FormEditorComponent() {
                           <div className="space-y-1">
                             <label
                               htmlFor={field.name}
-                              className="text-[10px] font-bold text-slate-600 uppercase"
+                              className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
                             >
                               Organization
                             </label>
@@ -346,7 +353,7 @@ function FormEditorComponent() {
                                 field.handleChange(e.target.value);
                                 handleUpdate();
                               }}
-                              className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
                             />
                           </div>
                         )}
@@ -357,7 +364,7 @@ function FormEditorComponent() {
                         <div className="space-y-1">
                           <label
                             htmlFor={field.name}
-                            className="text-[10px] font-bold text-slate-600 uppercase"
+                            className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
                           >
                             Description (HTML)
                           </label>
@@ -369,7 +376,7 @@ function FormEditorComponent() {
                               field.handleChange(e.target.value);
                               handleUpdate();
                             }}
-                            className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none min-h-[80px]"
+                            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none min-h-[80px]"
                           />
                         </div>
                       )}
@@ -383,8 +390,8 @@ function FormEditorComponent() {
 
         {/* Skills Section */}
         <section className="space-y-4 pt-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-            <div className="flex items-center gap-2 text-purple-400">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+            <div className="flex items-center gap-2 text-purple-500 dark:text-purple-400">
               <Settings size={18} />
               <h3 className="font-black text-xs uppercase tracking-widest">
                 Technical Skills
@@ -400,7 +407,7 @@ function FormEditorComponent() {
                 ];
                 setData({ ...data, techSkills: newItems });
               }}
-              className="cursor-pointer flex items-center gap-1 bg-purple-600/20 text-purple-400 px-2 py-1 rounded text-[10px] font-bold hover:bg-purple-600/30 transition-colors"
+              className="cursor-pointer flex items-center gap-1 bg-purple-600/20 text-purple-600 dark:text-purple-400 px-2 py-1 rounded text-[10px] font-bold hover:bg-purple-600/30 transition-colors"
             >
               <Plus size={12} /> ADD
             </button>
@@ -430,7 +437,7 @@ function FormEditorComponent() {
                         ),
                       })
                     }
-                    className="p-2 border-slate-800/50"
+                    className="p-2 border-slate-200 dark:border-slate-800/50"
                   >
                     <div className="flex items-center gap-4">
                       <form.Field name={`techSkills[${i}].name`}>
@@ -460,9 +467,9 @@ function FormEditorComponent() {
                                 field.handleChange(Number(e.target.value));
                                 handleUpdate();
                               }}
-                              className="flex-1 accent-purple-500 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+                              className="flex-1 accent-purple-500 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer"
                             />
-                            <span className="text-[10px] font-mono text-slate-500 w-6 text-right">
+                            <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 w-6 text-right">
                               {field.state.value ?? 0}%
                             </span>
                           </div>
@@ -478,8 +485,8 @@ function FormEditorComponent() {
 
         {/* Education Section */}
         <section className="space-y-4 pt-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-            <div className="flex items-center gap-2 text-amber-400">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+            <div className="flex items-center gap-2 text-amber-500 dark:text-amber-400">
               <GraduationCap size={18} />
               <h3 className="font-black text-xs uppercase tracking-widest">
                 Education
@@ -501,7 +508,7 @@ function FormEditorComponent() {
                 ];
                 setData({ ...data, educations: newItems });
               }}
-              className="cursor-pointer flex items-center gap-1 bg-amber-600/20 text-amber-400 px-2 py-1 rounded text-[10px] font-bold hover:bg-amber-600/30 transition-colors"
+              className="cursor-pointer flex items-center gap-1 bg-amber-600/20 text-amber-600 dark:text-amber-400 px-2 py-1 rounded text-[10px] font-bold hover:bg-amber-600/30 transition-colors"
             >
               <Plus size={12} /> ADD
             </button>
@@ -537,7 +544,7 @@ function FormEditorComponent() {
                           <div className="space-y-1">
                             <label
                               htmlFor={field.name}
-                              className="text-[10px] font-bold text-slate-600 uppercase"
+                              className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
                             >
                               Degree
                             </label>
@@ -549,7 +556,7 @@ function FormEditorComponent() {
                                 field.handleChange(e.target.value);
                                 handleUpdate();
                               }}
-                              className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
                             />
                           </div>
                         )}
@@ -560,7 +567,7 @@ function FormEditorComponent() {
                             <div className="space-y-1">
                               <label
                                 htmlFor={field.name}
-                                className="text-[10px] font-bold text-slate-600 uppercase"
+                                className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
                               >
                                 Organization
                               </label>
@@ -572,7 +579,7 @@ function FormEditorComponent() {
                                   field.handleChange(e.target.value);
                                   handleUpdate();
                                 }}
-                                className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
+                                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
                               />
                             </div>
                           )}
@@ -583,7 +590,7 @@ function FormEditorComponent() {
                               <div className="space-y-1">
                                 <label
                                   htmlFor={field.name}
-                                  className="text-[10px] font-bold text-slate-600 uppercase"
+                                  className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
                                 >
                                   Start
                                 </label>
@@ -595,7 +602,7 @@ function FormEditorComponent() {
                                     field.handleChange(e.target.value);
                                     handleUpdate();
                                   }}
-                                  className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
+                                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
                                 />
                               </div>
                             )}
@@ -605,7 +612,7 @@ function FormEditorComponent() {
                               <div className="space-y-1">
                                 <label
                                   htmlFor={field.name}
-                                  className="text-[10px] font-bold text-slate-600 uppercase"
+                                  className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
                                 >
                                   End
                                 </label>
@@ -617,7 +624,7 @@ function FormEditorComponent() {
                                     field.handleChange(e.target.value);
                                     handleUpdate();
                                   }}
-                                  className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none"
+                                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
                                 />
                               </div>
                             )}
@@ -633,8 +640,8 @@ function FormEditorComponent() {
 
         {/* Languages Section */}
         <section className="space-y-4 pt-4 pb-8">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-            <div className="flex items-center gap-2 text-blue-300">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+            <div className="flex items-center gap-2 text-blue-500 dark:text-blue-300">
               <Languages size={18} />
               <h3 className="font-black text-xs uppercase tracking-widest">
                 Languages
@@ -650,7 +657,7 @@ function FormEditorComponent() {
                 ];
                 setData({ ...data, languages: newItems });
               }}
-              className="cursor-pointer flex items-center gap-1 bg-blue-600/20 text-blue-300 px-2 py-1 rounded text-[10px] font-bold hover:bg-blue-600/30 transition-colors"
+              className="cursor-pointer flex items-center gap-1 bg-blue-600/20 text-blue-500 dark:text-blue-300 px-2 py-1 rounded text-[10px] font-bold hover:bg-blue-600/30 transition-colors"
             >
               <Plus size={12} /> ADD
             </button>
@@ -680,7 +687,7 @@ function FormEditorComponent() {
                         ),
                       })
                     }
-                    className="p-2 border-slate-800/50"
+                    className="p-2 border-slate-200 dark:border-slate-800/50"
                   >
                     <div className="flex items-center gap-4">
                       <form.Field name={`languages[${i}].language`}>
@@ -707,7 +714,7 @@ function FormEditorComponent() {
                                 field.handleChange(Number(e.target.value));
                                 handleUpdate();
                               }}
-                              className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs outline-none"
+                              className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-900 dark:text-slate-200 outline-none"
                             >
                               {[1, 2, 3, 4, 5].map((lvl) => (
                                 <option key={lvl} value={lvl}>
