@@ -66,7 +66,7 @@ function SortableItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group bg-white dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl p-4 transition-colors hover:border-slate-300 dark:hover:border-slate-700 ${isDragging ? "opacity-50 ring-2 ring-blue-500/20 shadow-2xl z-50" : "opacity-100"} ${className}`}
+      className={`group bg-surface-bg border border-border-base rounded-xl p-4 transition-colors hover:border-slate-300 dark:hover:border-slate-700 ${isDragging ? "opacity-50 ring-2 ring-blue-500/20 shadow-2xl z-50" : "opacity-100"} ${className}`}
     >
       <div className="flex gap-4">
         {/* Handle */}
@@ -74,7 +74,7 @@ function SortableItem({
           ref={setActivatorNodeRef}
           {...attributes}
           {...listeners}
-          className="cursor-grab active:cursor-grabbing text-slate-400 dark:text-slate-700 hover:text-slate-600 dark:hover:text-slate-400 p-1 flex items-center touch-none transition-colors"
+          className="cursor-grab active:cursor-grabbing text-text-muted hover:text-text-main p-1 flex items-center touch-none transition-colors"
         >
           <GripVertical size={18} />
         </div>
@@ -85,7 +85,7 @@ function SortableItem({
         <button
           type="button"
           onClick={onRemove}
-          className="text-slate-400 dark:text-slate-700 hover:text-red-500 transition-colors p-1 self-start cursor-pointer"
+          className="text-text-muted hover:text-red-500 transition-colors p-1 self-start cursor-pointer"
         >
           <Trash2 size={18} />
         </button>
@@ -114,7 +114,7 @@ function FormEditorComponent() {
     if (currentValues !== storeValues) {
       form.reset({ defaultValues: data });
     }
-  }, [data, form]);
+  }, [data, form.reset, form.state.values]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -145,7 +145,7 @@ function FormEditorComponent() {
   };
 
   return (
-    <div className="h-full overflow-y-auto bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 p-6 space-y-8 custom-scrollbar pb-32 transition-colors">
+    <div className="h-full overflow-y-auto bg-app-bg text-text-main p-6 space-y-8 custom-scrollbar pb-32 transition-colors duration-300">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -156,7 +156,7 @@ function FormEditorComponent() {
       >
         {/* Personal Info Section */}
         <section className="space-y-4">
-          <div className="flex items-center gap-2 text-blue-500 dark:text-blue-400 border-b border-slate-200 dark:border-slate-800 pb-2">
+          <div className="flex items-center gap-2 text-blue-500 dark:text-blue-400 border-b border-border-base pb-2">
             <User size={18} />
             <h3 className="font-black text-xs uppercase tracking-widest">
               Personal Information
@@ -168,7 +168,7 @@ function FormEditorComponent() {
                 <div className="space-y-1">
                   <label
                     htmlFor={field.name}
-                    className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase"
+                    className="text-[10px] font-bold text-text-muted uppercase"
                   >
                     First Name
                   </label>
@@ -180,7 +180,7 @@ function FormEditorComponent() {
                       field.handleChange(e.target.value);
                       handleUpdate();
                     }}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none transition-all"
+                    className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none transition-all"
                   />
                 </div>
               )}
@@ -190,7 +190,7 @@ function FormEditorComponent() {
                 <div className="space-y-1">
                   <label
                     htmlFor={field.name}
-                    className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase"
+                    className="text-[10px] font-bold text-text-muted uppercase"
                   >
                     Last Name
                   </label>
@@ -202,7 +202,7 @@ function FormEditorComponent() {
                       field.handleChange(e.target.value);
                       handleUpdate();
                     }}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none transition-all"
+                    className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none transition-all"
                   />
                 </div>
               )}
@@ -213,7 +213,7 @@ function FormEditorComponent() {
               <div className="space-y-1">
                 <label
                   htmlFor={field.name}
-                  className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase"
+                  className="text-[10px] font-bold text-text-muted uppercase"
                 >
                   Professional Title
                 </label>
@@ -225,7 +225,7 @@ function FormEditorComponent() {
                     field.handleChange(e.target.value);
                     handleUpdate();
                   }}
-                  className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none transition-all"
+                  className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none transition-all"
                 />
               </div>
             )}
@@ -235,7 +235,7 @@ function FormEditorComponent() {
               <div className="space-y-1">
                 <label
                   htmlFor={field.name}
-                  className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase"
+                  className="text-[10px] font-bold text-text-muted uppercase"
                 >
                   Summary (HTML supported)
                 </label>
@@ -247,7 +247,7 @@ function FormEditorComponent() {
                     field.handleChange(e.target.value);
                     handleUpdate();
                   }}
-                  className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none transition-all min-h-[100px] resize-y"
+                  className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none transition-all min-h-[100px] resize-y"
                 />
               </div>
             )}
@@ -256,7 +256,7 @@ function FormEditorComponent() {
 
         {/* Experience Section */}
         <section className="space-y-4 pt-4">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+          <div className="flex items-center justify-between border-b border-border-base pb-2">
             <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400">
               <Briefcase size={18} />
               <h3 className="font-black text-xs uppercase tracking-widest">
@@ -317,7 +317,7 @@ function FormEditorComponent() {
                           <div className="space-y-1">
                             <label
                               htmlFor={field.name}
-                              className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
+                              className="text-[10px] font-bold text-text-muted uppercase"
                             >
                               Job Title
                             </label>
@@ -329,7 +329,7 @@ function FormEditorComponent() {
                                 field.handleChange(e.target.value);
                                 handleUpdate();
                               }}
-                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
+                              className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
                             />
                           </div>
                         )}
@@ -341,7 +341,7 @@ function FormEditorComponent() {
                           <div className="space-y-1">
                             <label
                               htmlFor={field.name}
-                              className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
+                              className="text-[10px] font-bold text-text-muted uppercase"
                             >
                               Organization
                             </label>
@@ -353,7 +353,7 @@ function FormEditorComponent() {
                                 field.handleChange(e.target.value);
                                 handleUpdate();
                               }}
-                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
+                              className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
                             />
                           </div>
                         )}
@@ -364,7 +364,7 @@ function FormEditorComponent() {
                         <div className="space-y-1">
                           <label
                             htmlFor={field.name}
-                            className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
+                            className="text-[10px] font-bold text-text-muted uppercase"
                           >
                             Description (HTML)
                           </label>
@@ -376,7 +376,7 @@ function FormEditorComponent() {
                               field.handleChange(e.target.value);
                               handleUpdate();
                             }}
-                            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none min-h-[80px]"
+                            className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none min-h-[80px]"
                           />
                         </div>
                       )}
@@ -390,7 +390,7 @@ function FormEditorComponent() {
 
         {/* Skills Section */}
         <section className="space-y-4 pt-4">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+          <div className="flex items-center justify-between border-b border-border-base pb-2">
             <div className="flex items-center gap-2 text-purple-500 dark:text-purple-400">
               <Settings size={18} />
               <h3 className="font-black text-xs uppercase tracking-widest">
@@ -437,7 +437,7 @@ function FormEditorComponent() {
                         ),
                       })
                     }
-                    className="p-2 border-slate-200 dark:border-slate-800/50"
+                    className="p-2 border-border-base"
                   >
                     <div className="flex items-center gap-4">
                       <form.Field name={`techSkills[${i}].name`}>
@@ -467,7 +467,7 @@ function FormEditorComponent() {
                                 field.handleChange(Number(e.target.value));
                                 handleUpdate();
                               }}
-                              className="flex-1 accent-purple-500 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer"
+                              className="flex-1 accent-purple-500 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer"
                             />
                             <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 w-6 text-right">
                               {field.state.value ?? 0}%
@@ -485,7 +485,7 @@ function FormEditorComponent() {
 
         {/* Education Section */}
         <section className="space-y-4 pt-4">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+          <div className="flex items-center justify-between border-b border-border-base pb-2">
             <div className="flex items-center gap-2 text-amber-500 dark:text-amber-400">
               <GraduationCap size={18} />
               <h3 className="font-black text-xs uppercase tracking-widest">
@@ -544,7 +544,7 @@ function FormEditorComponent() {
                           <div className="space-y-1">
                             <label
                               htmlFor={field.name}
-                              className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
+                              className="text-[10px] font-bold text-text-muted uppercase"
                             >
                               Degree
                             </label>
@@ -556,7 +556,7 @@ function FormEditorComponent() {
                                 field.handleChange(e.target.value);
                                 handleUpdate();
                               }}
-                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
+                              className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
                             />
                           </div>
                         )}
@@ -567,7 +567,7 @@ function FormEditorComponent() {
                             <div className="space-y-1">
                               <label
                                 htmlFor={field.name}
-                                className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
+                                className="text-[10px] font-bold text-text-muted uppercase"
                               >
                                 Organization
                               </label>
@@ -579,7 +579,7 @@ function FormEditorComponent() {
                                   field.handleChange(e.target.value);
                                   handleUpdate();
                                 }}
-                                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
+                                className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
                               />
                             </div>
                           )}
@@ -590,7 +590,7 @@ function FormEditorComponent() {
                               <div className="space-y-1">
                                 <label
                                   htmlFor={field.name}
-                                  className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
+                                  className="text-[10px] font-bold text-text-muted uppercase"
                                 >
                                   Start
                                 </label>
@@ -602,7 +602,7 @@ function FormEditorComponent() {
                                     field.handleChange(e.target.value);
                                     handleUpdate();
                                   }}
-                                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
+                                  className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
                                 />
                               </div>
                             )}
@@ -612,7 +612,7 @@ function FormEditorComponent() {
                               <div className="space-y-1">
                                 <label
                                   htmlFor={field.name}
-                                  className="text-[10px] font-bold text-slate-500 dark:text-slate-600 uppercase"
+                                  className="text-[10px] font-bold text-text-muted uppercase"
                                 >
                                   End
                                 </label>
@@ -624,7 +624,7 @@ function FormEditorComponent() {
                                     field.handleChange(e.target.value);
                                     handleUpdate();
                                   }}
-                                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-200 focus:border-blue-500 outline-none"
+                                  className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
                                 />
                               </div>
                             )}
@@ -640,7 +640,7 @@ function FormEditorComponent() {
 
         {/* Languages Section */}
         <section className="space-y-4 pt-4 pb-8">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+          <div className="flex items-center justify-between border-b border-border-base pb-2">
             <div className="flex items-center gap-2 text-blue-500 dark:text-blue-300">
               <Languages size={18} />
               <h3 className="font-black text-xs uppercase tracking-widest">
@@ -687,7 +687,7 @@ function FormEditorComponent() {
                         ),
                       })
                     }
-                    className="p-2 border-slate-200 dark:border-slate-800/50"
+                    className="p-2 border-border-base"
                   >
                     <div className="flex items-center gap-4">
                       <form.Field name={`languages[${i}].language`}>

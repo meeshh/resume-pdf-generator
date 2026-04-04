@@ -2,30 +2,64 @@
 
 @theme {
   --font-sans: "Inter", "system-ui", "-apple-system", "sans-serif";
+  
+  /* 
+    Define the semantic colors as CSS variables. 
+    Tailwind v4 will automatically generate --color-app-bg etc. 
+    based on these definitions.
+  */
+  --color-app-bg: var(--app-bg);
+  --color-surface-bg: var(--surface-bg);
+  --color-border-base: var(--border-base);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
 }
 
-body {
-  @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300;
+/* 
+  Define the base variables on :root. 
+  Tailwind v4 uses these as the source for theme colors.
+*/
+:root {
+  --app-bg: #f1f5f9;
+  --surface-bg: #ffffff;
+  --border-base: #cbd5e1;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
 }
 
-/* Custom Scrollbar for FormEditor */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+/* 
+  Dark mode overrides for the CSS variables.
+  This works whether .dark is on html or body.
+*/
+.dark, [data-theme='dark'] {
+  --app-bg: #0f172a;
+  --surface-bg: #1e293b;
+  --border-base: #334155;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  @apply bg-slate-100 dark:bg-slate-900;
+/* 
+  Crucial for Tailwind v4: Enable the 'dark' variant for class-based dark mode.
+  This allows using dark: utility classes (e.g., dark:bg-slate-800).
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  * {
+    @apply border-border-base transition-colors duration-200;
+  }
+
+  body {
+    @apply bg-app-bg text-text-main transition-colors duration-300 antialiased;
+  }
+
+  button {
+    @apply cursor-pointer disabled:cursor-not-allowed;
+  }
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 dark:bg-slate-800 rounded-full border-2 border-slate-100 dark:border-slate-900;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-400 dark:bg-slate-700;
-}
-
-/* Global scrollbar style */
+/* Global scrollbar styles */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -41,4 +75,17 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-slate-500 dark:bg-slate-700;
+}
+
+/* Custom Scrollbar for FormEditor */
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-app-bg;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-800 rounded-full border-2 border-slate-100 dark:border-slate-950;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400 dark:bg-slate-700;
 }

@@ -156,7 +156,7 @@ function App() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [undo, redo]);
 
-  // Sync theme with HTML class
+  // Sync theme with root element class
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
@@ -213,28 +213,28 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-slate-50 dark:bg-slate-900 font-sans transition-colors">
+    <div className="flex flex-col h-screen overflow-hidden bg-app-bg font-sans transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-3 flex justify-between items-center z-10 transition-colors">
+      <header className="bg-surface-bg border-b border-border-base px-6 py-3 flex justify-between items-center z-10 transition-colors duration-300">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3 text-blue-500 dark:text-blue-400">
             <FileJson
               size={28}
               className="drop-shadow-[0_0_8px_rgba(129,140,248,0.5)]"
             />
-            <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white uppercase italic">
+            <h1 className="text-lg font-bold tracking-tight text-text-main uppercase italic">
               ResuMint
             </h1>
           </div>
 
-          <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden md:block" />
+          <div className="h-6 w-px bg-border-base hidden md:block" />
 
           {/* Undo/Redo Controls */}
           <div className="flex items-center gap-1">
             <button
               onClick={() => undo()}
               disabled={pastStates.length === 0}
-              className="p-2 text-slate-500 dark:text-slate-400 enabled:hover:text-slate-900 dark:enabled:hover:text-white enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed rounded-lg transition-all"
+              className="p-2 text-text-muted enabled:hover:text-text-main enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed rounded-lg transition-all"
               title="Undo (Ctrl+Z)"
             >
               <Undo2 size={18} />
@@ -242,7 +242,7 @@ function App() {
             <button
               onClick={() => redo()}
               disabled={futureStates.length === 0}
-              className="p-2 text-slate-500 dark:text-slate-400 enabled:hover:text-slate-900 dark:enabled:hover:text-white enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed rounded-lg transition-all"
+              className="p-2 text-text-muted enabled:hover:text-text-main enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed rounded-lg transition-all"
               title="Redo (Ctrl+Y)"
             >
               <Redo2 size={18} />
@@ -265,7 +265,7 @@ function App() {
           <button
             type="button"
             onClick={() => setShowVersions(true)}
-            className="cursor-pointer flex items-center gap-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition-all border border-slate-300 dark:border-slate-600 mr-2"
+            className="cursor-pointer flex items-center gap-2 bg-surface-bg text-text-main px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition-all border border-border-base mr-2"
           >
             <History size={16} />
             VERSIONS
@@ -287,7 +287,7 @@ function App() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all border border-transparent hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer"
+            className="p-1.5 text-text-muted hover:text-text-main hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all border border-transparent hover:border-border-base cursor-pointer"
             title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
@@ -296,7 +296,7 @@ function App() {
           <button
             type="button"
             onClick={() => setShowSettings(true)}
-            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all border border-transparent hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer"
+            className="p-1.5 text-text-muted hover:text-text-main hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all border border-transparent hover:border-border-base cursor-pointer"
             title="AI Settings"
           >
             <Settings size={20} />
@@ -307,20 +307,20 @@ function App() {
       {/* Main Content */}
       <main className="flex flex-1 overflow-hidden">
         {/* Editor Pane */}
-        <div className="w-[40%] max-w-[600px] flex flex-col border-r border-slate-200 dark:border-slate-700">
-          <div className="px-4 py-2 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+        <div className="w-[40%] max-w-[600px] flex flex-col border-r border-border-base">
+          <div className="px-4 py-2 bg-surface-bg border-b border-border-base flex justify-between items-center">
             <div className="flex gap-4" data-tour="tour-mode-toggle">
               <button
                 type="button"
                 onClick={() => setEditMode("form")}
-                className={`cursor-pointer text-[10px] font-black tracking-widest uppercase transition-colors ${editMode === "form" ? "text-blue-500 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400"}`}
+                className={`cursor-pointer text-[10px] font-black tracking-widest uppercase transition-colors ${editMode === "form" ? "text-blue-500 dark:text-blue-400" : "text-text-muted hover:text-text-main"}`}
               >
                 Form Editor
               </button>
               <button
                 type="button"
                 onClick={() => setEditMode("code")}
-                className={`cursor-pointer text-[10px] font-black tracking-widest uppercase transition-colors ${editMode === "code" ? "text-blue-500 dark:text-blue-400" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400"}`}
+                className={`cursor-pointer text-[10px] font-black tracking-widest uppercase transition-colors ${editMode === "code" ? "text-blue-500 dark:text-blue-400" : "text-text-muted hover:text-text-main"}`}
               >
                 Source Code
               </button>
@@ -336,9 +336,9 @@ function App() {
                 />
               </label>
               
-              <div className="h-4 w-px bg-slate-200 dark:bg-slate-700" />
+              <div className="h-4 w-px bg-border-base" />
               
-              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 cursor-pointer hover:text-slate-900 dark:hover:text-white transition-colors">
+              <label className="text-[10px] font-bold text-text-muted cursor-pointer hover:text-text-main transition-colors">
                 IMPORT JSON
                 <input
                   type="file"
@@ -356,7 +356,7 @@ function App() {
             </div>
           </div>
           <div
-            className="flex-1 overflow-hidden bg-slate-50 dark:bg-[#0d1117]"
+            className="flex-1 overflow-hidden bg-app-bg"
             data-tour="tour-editor"
           >
             {editMode === "code" ? (
@@ -387,7 +387,7 @@ function App() {
         </div>
 
         {/* Preview Pane */}
-        <div className="w-[60%] bg-slate-100 dark:bg-slate-950 flex flex-col relative transition-colors">
+        <div className="w-[60%] bg-app-bg flex flex-col relative transition-colors duration-300">
           {/* Template Selector Thumbnails */}
           <div
             className="absolute top-4 left-6 z-20 flex items-center gap-3"
@@ -411,11 +411,11 @@ function App() {
                 type="button"
                 key={tpl.id}
                 onClick={() => setTemplate(tpl.id as TemplateType)}
-                className={`cursor-pointer group relative w-16 h-20 rounded-lg border-2 transition-all flex flex-col overflow-hidden bg-white dark:bg-slate-800 ${template === tpl.id ? "border-blue-500 ring-2 ring-blue-500/20 shadow-[0_0_15px_rgba(99,102,241,0.3)]" : "border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500"}`}
+                className={`cursor-pointer group relative w-16 h-20 rounded-lg border-2 transition-all flex flex-col overflow-hidden bg-surface-bg ${template === tpl.id ? "border-blue-500 ring-2 ring-blue-500/20 shadow-[0_0_15px_rgba(99,102,241,0.3)]" : "border-border-base hover:border-slate-400 dark:hover:border-slate-500"}`}
               >
-                <div className="flex-1 bg-slate-100 dark:bg-slate-900/50">{tpl.icon}</div>
+                <div className="flex-1 bg-app-bg">{tpl.icon}</div>
                 <div
-                  className={`py-1 text-[9px] font-bold text-center uppercase tracking-tighter ${template === tpl.id ? "bg-blue-500 text-white" : "bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"}`}
+                  className={`py-1 text-[9px] font-bold text-center uppercase tracking-tighter ${template === tpl.id ? "bg-blue-500 text-white" : "bg-surface-bg text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"}`}
                 >
                   {tpl.name}
                 </div>
@@ -427,7 +427,7 @@ function App() {
               </button>
             ))}
 
-            <div className="h-12 w-px bg-slate-300 dark:bg-slate-700 mx-1" />
+            <div className="h-12 w-px bg-border-base mx-1" />
 
             {[
               {
@@ -479,11 +479,11 @@ function App() {
                 type="button"
                 key={tpl.id}
                 onClick={() => setTemplate(tpl.id as TemplateType)}
-                className={`cursor-pointer group relative w-16 h-20 rounded-lg border-2 transition-all flex flex-col overflow-hidden bg-white dark:bg-slate-800 ${template === tpl.id ? "border-blue-500 ring-2 ring-blue-500/20 shadow-[0_0_15px_rgba(99,102,241,0.3)]" : "border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500"}`}
+                className={`cursor-pointer group relative w-16 h-20 rounded-lg border-2 transition-all flex flex-col overflow-hidden bg-surface-bg ${template === tpl.id ? "border-blue-500 ring-2 ring-blue-500/20 shadow-[0_0_15px_rgba(99,102,241,0.3)]" : "border-border-base hover:border-slate-400 dark:hover:border-slate-500"}`}
               >
-                <div className="flex-1 bg-slate-100 dark:bg-slate-900/50">{tpl.icon}</div>
+                <div className="flex-1 bg-app-bg">{tpl.icon}</div>
                 <div
-                  className={`py-1 text-[9px] font-bold text-center uppercase tracking-tighter ${template === tpl.id ? "bg-blue-500 text-white" : "bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"}`}
+                  className={`py-1 text-[9px] font-bold text-center uppercase tracking-tighter ${template === tpl.id ? "bg-blue-500 text-white" : "bg-surface-bg text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"}`}
                 >
                   {tpl.name}
                 </div>
@@ -500,7 +500,7 @@ function App() {
             <button
               type="button"
               onClick={handleRefresh}
-              className="cursor-pointer p-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+              className="cursor-pointer p-2 bg-surface-bg text-slate-600 dark:text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all border border-border-base hover:bg-slate-100 dark:hover:bg-slate-700"
               title="Refresh Preview"
             >
               <RefreshCw size={18} />
@@ -508,7 +508,7 @@ function App() {
 
             {/* Color Presets Dropdown - only for visual templates */}
             {template !== "ats" && (
-              <div className="group flex flex-col items-center gap-2 p-[5px] bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 shadow-xl transition-all duration-300 w-9 h-9 hover:h-[196px] overflow-hidden cursor-pointer">
+              <div className="group flex flex-col items-center gap-2 p-[5px] bg-surface-bg rounded-full border border-border-base shadow-xl transition-all duration-300 w-9 h-9 hover:h-[196px] overflow-hidden cursor-pointer">
                 {/* Current selected color at the top */}
                 <div
                   className="w-6 h-6 rounded-full border-2 border-white shadow-sm shrink-0"
@@ -541,7 +541,7 @@ function App() {
 
           <div className="flex-1 p-6 pt-28">
             <div
-              className="w-full h-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden bg-white border border-slate-200 dark:border-slate-800"
+              className="w-full h-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden bg-white border border-border-base"
               data-tour="tour-preview"
               data-darkreader-ignore="true"
               data-color-mode="light"
@@ -564,8 +564,8 @@ function App() {
       {/* Schema Modal */}
       {showSchema && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-8">
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[80vh]">
-            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+          <div className="bg-surface-bg border border-border-base rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[80vh]">
+            <div className="px-6 py-4 border-b border-border-base flex justify-between items-center bg-app-bg">
               <div className="flex items-center gap-2">
                 <Sparkles size={20} className="text-blue-500 dark:text-blue-400" />
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
@@ -580,7 +580,7 @@ function App() {
                 <X size={24} />
               </button>
             </div>
-            <div className="p-6 overflow-y-auto bg-white dark:bg-[#0d1117]">
+            <div className="p-6 overflow-y-auto bg-surface-bg">
               <div className="mb-4 text-sm text-slate-500 dark:text-slate-400">
                 Copy this schema and tell your LLM: <br />
                 <span className="italic text-blue-600 dark:text-blue-300">
@@ -588,11 +588,11 @@ function App() {
                   follows this schema:"
                 </span>
               </div>
-              <pre className="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg text-blue-600 dark:text-blue-400 text-xs font-mono border border-blue-500/30 whitespace-pre-wrap">
+              <pre className="p-4 bg-app-bg rounded-lg text-blue-600 dark:text-blue-400 text-xs font-mono border border-blue-500/30 whitespace-pre-wrap">
                 {JSON_SCHEMA}
               </pre>
             </div>
-            <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3 bg-slate-50 dark:bg-slate-900/50">
+            <div className="px-6 py-4 border-t border-border-base flex justify-end gap-3 bg-app-bg">
               <button
                 type="button"
                 onClick={() => copyToClipboard(JSON_SCHEMA)}

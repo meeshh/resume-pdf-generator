@@ -41,20 +41,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-100 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col transition-colors">
+      <div className="bg-surface-bg border border-border-base rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col transition-colors duration-300">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+        <div className="px-6 py-4 border-b border-border-base flex justify-between items-center bg-surface-bg">
           <div className="flex items-center gap-3">
-            <div className="bg-slate-200 dark:bg-slate-700 p-2 rounded-lg">
+            <div className="bg-app-bg p-2 rounded-lg">
               <Key size={20} className="text-blue-500 dark:text-blue-400" />
             </div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-lg font-bold text-text-main tracking-tight">
               AI Configuration
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors text-text-muted hover:text-text-main"
           >
             <X size={20} />
           </button>
@@ -71,7 +71,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <label className="text-xs font-bold text-text-muted uppercase tracking-wider">
                 OpenAI API Key (GPT-4o)
               </label>
               <input
@@ -79,12 +79,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
                 value={openaiKey}
                 onChange={(e) => setOpenaiKey(e.target.value)}
                 placeholder="sk-..."
-                className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-blue-400 focus:border-blue-500 outline-none transition-all"
+                className="w-full bg-white dark:bg-slate-950 border border-border-base rounded-xl px-4 py-2.5 text-sm text-text-main focus:border-blue-500 outline-none transition-all"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <label className="text-xs font-bold text-text-muted uppercase tracking-wider">
                 Google Gemini API Key
               </label>
               <input
@@ -92,17 +92,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
                 value={geminiKey}
                 onChange={(e) => setGeminiKey(e.target.value)}
                 placeholder="AIza..."
-                className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-blue-400 focus:border-blue-500 outline-none transition-all"
+                className="w-full bg-white dark:bg-slate-950 border border-border-base rounded-xl px-4 py-2.5 text-sm text-text-main focus:border-blue-500 outline-none transition-all"
               />
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
+        <div className="px-6 py-4 bg-surface-bg border-t border-border-base flex justify-between items-center">
           <button
             onClick={handleClear}
-            className="flex items-center gap-2 text-xs font-bold text-slate-400 dark:text-slate-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+            className="flex items-center gap-2 text-xs font-bold text-text-muted hover:text-red-600 dark:hover:text-red-400 transition-colors"
           >
             <Trash2 size={14} />
             CLEAR KEYS
