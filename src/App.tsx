@@ -249,18 +249,18 @@ function App() {
       <header className="bg-surface-bg border-b border-border-base px-6 py-3 flex justify-between items-center z-10 transition-colors duration-300">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3 text-emerald-500 dark:text-emerald-400">
-            <img 
-              src="/favicon.svg" 
-              alt="ResuMint Logo" 
-              className="w-8 h-8 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]" 
+            <img
+              src="/favicon.svg"
+              alt="ResuMint Logo"
+              className="w-8 h-8 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]"
             />
-            <h1 
-              className="text-2xl text-text-main" 
+            <h1
+              className="text-2xl text-text-main"
               style={{ fontFamily: "'Petit Formal Script', cursive" }}
             >
               Resumint
             </h1>
-            </div>
+          </div>
           <div className="h-6 w-px bg-border-base hidden md:block" />
 
           {/* Undo/Redo Controls */}
