@@ -250,7 +250,7 @@ function App() {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3 text-emerald-500 dark:text-emerald-400">
             <img
-              src="/favicon.svg"
+              src={`${import.meta.env.BASE_URL}favicon.svg`}
               alt="ResuMint Logo"
               className="w-8 h-8 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]"
             />
