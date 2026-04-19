@@ -4,9 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "homepage": "https://meeshh.github.io/resume-pdf-generator/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meeshh/resume-pdf-generator.git"
+  },
+  "author": "meeshh",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build --base /resume-pdf-generator/",
     "lint": "biome check .",
     "format": "biome format --write .",
     "preview": "vite preview",
