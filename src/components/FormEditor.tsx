@@ -66,7 +66,7 @@ function SortableItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group bg-surface-bg border border-border-base rounded-xl p-4 transition-colors hover:border-slate-300 dark:hover:border-slate-700 ${isDragging ? "opacity-50 ring-2 ring-blue-500/20 shadow-2xl z-50" : "opacity-100"} ${className}`}
+      className={`group bg-surface-bg border border-border-base rounded p-4 transition-colors hover:border-slate-300 dark:hover:border-slate-700 ${isDragging ? "opacity-50 ring-2 ring-emerald-500/20 shadow-2xl z-50" : "opacity-100"} ${className}`}
     >
       <div className="flex gap-4">
         {/* Handle */}
@@ -110,7 +110,7 @@ function FormEditorComponent() {
     // to avoid unnecessary re-renders and potential cursor jumps
     const currentValues = JSON.stringify(form.state.values);
     const storeValues = JSON.stringify(data);
-    
+
     if (currentValues !== storeValues) {
       form.reset(data);
     }
@@ -156,7 +156,7 @@ function FormEditorComponent() {
       >
         {/* Personal Info Section */}
         <section className="space-y-4">
-          <div className="flex items-center gap-2 text-blue-500 dark:text-blue-400 border-b border-border-base pb-2">
+          <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400 border-b border-border-base pb-2">
             <User size={18} />
             <h3 className="font-black text-xs uppercase tracking-widest">
               Personal Information
@@ -180,7 +180,7 @@ function FormEditorComponent() {
                       field.handleChange(e.target.value);
                       handleUpdate();
                     }}
-                    className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none transition-all"
+                    className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none transition-all"
                   />
                 </div>
               )}
@@ -202,7 +202,7 @@ function FormEditorComponent() {
                       field.handleChange(e.target.value);
                       handleUpdate();
                     }}
-                    className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none transition-all"
+                    className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none transition-all"
                   />
                 </div>
               )}
@@ -225,7 +225,7 @@ function FormEditorComponent() {
                     field.handleChange(e.target.value);
                     handleUpdate();
                   }}
-                  className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none transition-all"
+                  className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none transition-all"
                 />
               </div>
             )}
@@ -247,7 +247,7 @@ function FormEditorComponent() {
                     field.handleChange(e.target.value);
                     handleUpdate();
                   }}
-                  className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none transition-all min-h-[100px] resize-y"
+                  className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none transition-all min-h-[100px] resize-y"
                 />
               </div>
             )}
@@ -329,7 +329,7 @@ function FormEditorComponent() {
                                 field.handleChange(e.target.value);
                                 handleUpdate();
                               }}
-                              className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
+                              className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none"
                             />
                           </div>
                         )}
@@ -353,7 +353,7 @@ function FormEditorComponent() {
                                 field.handleChange(e.target.value);
                                 handleUpdate();
                               }}
-                              className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
+                              className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none"
                             />
                           </div>
                         )}
@@ -376,7 +376,7 @@ function FormEditorComponent() {
                               field.handleChange(e.target.value);
                               handleUpdate();
                             }}
-                            className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none min-h-[80px]"
+                            className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none min-h-[80px]"
                           />
                         </div>
                       )}
@@ -450,7 +450,7 @@ function FormEditorComponent() {
                               field.handleChange(e.target.value);
                               handleUpdate();
                             }}
-                            className="flex-1 bg-transparent border-b border-transparent focus:border-blue-500 outline-none text-sm font-bold"
+                            className="flex-1 bg-transparent border-b border-transparent focus:border-emerald-500 outline-none text-sm font-bold"
                           />
                         )}
                       </form.Field>
@@ -467,7 +467,7 @@ function FormEditorComponent() {
                                 field.handleChange(Number(e.target.value));
                                 handleUpdate();
                               }}
-                              className="flex-1 accent-purple-500 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer"
+                              className="flex-1 accent-purple-500 h-1.5 bg-slate-200 dark:bg-slate-700 rounded appearance-none cursor-pointer"
                             />
                             <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 w-6 text-right">
                               {field.state.value ?? 0}%
@@ -527,26 +527,49 @@ function FormEditorComponent() {
             >
               <div className="space-y-4">
                 {data.educations.map((edu, i) => (
-                    <SortableItem
-                      key={edu.id}
-                      id={edu.id}
-                      onRemove={() =>
-                        setData({
-                          ...data,
-                          educations: data.educations.filter(
-                            (item) => item.id !== edu.id,
-                          ),
-                        })
-                      }
-                    >
-                      <form.Field name={`educations[${i}].degree`}>
+                  <SortableItem
+                    key={edu.id}
+                    id={edu.id}
+                    onRemove={() =>
+                      setData({
+                        ...data,
+                        educations: data.educations.filter(
+                          (item) => item.id !== edu.id,
+                        ),
+                      })
+                    }
+                  >
+                    <form.Field name={`educations[${i}].degree`}>
+                      {(field) => (
+                        <div className="space-y-1">
+                          <label
+                            htmlFor={field.name}
+                            className="text-[10px] font-bold text-text-muted uppercase"
+                          >
+                            Degree
+                          </label>
+                          <input
+                            id={field.name}
+                            value={field.state.value ?? ""}
+                            autoComplete="off"
+                            onChange={(e) => {
+                              field.handleChange(e.target.value);
+                              handleUpdate();
+                            }}
+                            className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none"
+                          />
+                        </div>
+                      )}
+                    </form.Field>
+                    <div className="grid grid-cols-2 gap-4">
+                      <form.Field name={`educations[${i}].organization`}>
                         {(field) => (
                           <div className="space-y-1">
                             <label
                               htmlFor={field.name}
                               className="text-[10px] font-bold text-text-muted uppercase"
                             >
-                              Degree
+                              Organization
                             </label>
                             <input
                               id={field.name}
@@ -556,20 +579,20 @@ function FormEditorComponent() {
                                 field.handleChange(e.target.value);
                                 handleUpdate();
                               }}
-                              className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
+                              className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none"
                             />
                           </div>
                         )}
                       </form.Field>
-                      <div className="grid grid-cols-2 gap-4">
-                        <form.Field name={`educations[${i}].organization`}>
+                      <div className="grid grid-cols-2 gap-2">
+                        <form.Field name={`educations[${i}].startYear`}>
                           {(field) => (
                             <div className="space-y-1">
                               <label
                                 htmlFor={field.name}
                                 className="text-[10px] font-bold text-text-muted uppercase"
                               >
-                                Organization
+                                Start
                               </label>
                               <input
                                 id={field.name}
@@ -579,59 +602,36 @@ function FormEditorComponent() {
                                   field.handleChange(e.target.value);
                                   handleUpdate();
                                 }}
-                                className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
+                                className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none"
                               />
                             </div>
                           )}
                         </form.Field>
-                        <div className="grid grid-cols-2 gap-2">
-                          <form.Field name={`educations[${i}].startYear`}>
-                            {(field) => (
-                              <div className="space-y-1">
-                                <label
-                                  htmlFor={field.name}
-                                  className="text-[10px] font-bold text-text-muted uppercase"
-                                >
-                                  Start
-                                </label>
-                                <input
-                                  id={field.name}
-                                  value={field.state.value ?? ""}
-                                  autoComplete="off"
-                                  onChange={(e) => {
-                                    field.handleChange(e.target.value);
-                                    handleUpdate();
-                                  }}
-                                  className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
-                                />
-                              </div>
-                            )}
-                          </form.Field>
-                          <form.Field name={`educations[${i}].endYear`}>
-                            {(field) => (
-                              <div className="space-y-1">
-                                <label
-                                  htmlFor={field.name}
-                                  className="text-[10px] font-bold text-text-muted uppercase"
-                                >
-                                  End
-                                </label>
-                                <input
-                                  id={field.name}
-                                  value={field.state.value ?? ""}
-                                  autoComplete="off"
-                                  onChange={(e) => {
-                                    field.handleChange(e.target.value);
-                                    handleUpdate();
-                                  }}
-                                  className="w-full bg-surface-bg border border-border-base rounded-lg px-3 py-2 text-sm text-text-main focus:border-blue-500 outline-none"
-                                />
-                              </div>
-                            )}
-                          </form.Field>
-                        </div>
+                        <form.Field name={`educations[${i}].endYear`}>
+                          {(field) => (
+                            <div className="space-y-1">
+                              <label
+                                htmlFor={field.name}
+                                className="text-[10px] font-bold text-text-muted uppercase"
+                              >
+                                End
+                              </label>
+                              <input
+                                id={field.name}
+                                value={field.state.value ?? ""}
+                                autoComplete="off"
+                                onChange={(e) => {
+                                  field.handleChange(e.target.value);
+                                  handleUpdate();
+                                }}
+                                className="w-full bg-surface-bg border border-border-base rounded px-3 py-2 text-sm text-text-main focus:border-emerald-500 outline-none"
+                              />
+                            </div>
+                          )}
+                        </form.Field>
                       </div>
-                    </SortableItem>
+                    </div>
+                  </SortableItem>
                 ))}
               </div>
             </SortableContext>
@@ -641,7 +641,7 @@ function FormEditorComponent() {
         {/* Languages Section */}
         <section className="space-y-4 pt-4 pb-8">
           <div className="flex items-center justify-between border-b border-border-base pb-2">
-            <div className="flex items-center gap-2 text-blue-500 dark:text-blue-300">
+            <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-300">
               <Languages size={18} />
               <h3 className="font-black text-xs uppercase tracking-widest">
                 Languages
@@ -657,7 +657,7 @@ function FormEditorComponent() {
                 ];
                 setData({ ...data, languages: newItems });
               }}
-              className="cursor-pointer flex items-center gap-1 bg-blue-600/20 text-blue-500 dark:text-blue-300 px-2 py-1 rounded text-[10px] font-bold hover:bg-blue-600/30 transition-colors"
+              className="cursor-pointer flex items-center gap-1 bg-emerald-600/20 text-emerald-500 dark:text-emerald-300 px-2 py-1 rounded text-[10px] font-bold hover:bg-emerald-600/30 transition-colors"
             >
               <Plus size={12} /> ADD
             </button>
@@ -700,7 +700,7 @@ function FormEditorComponent() {
                               field.handleChange(e.target.value);
                               handleUpdate();
                             }}
-                            className="flex-1 bg-transparent border-b border-transparent focus:border-blue-500 outline-none text-sm font-bold"
+                            className="flex-1 bg-transparent border-b border-transparent focus:border-emerald-500 outline-none text-sm font-bold"
                           />
                         )}
                       </form.Field>
@@ -714,7 +714,7 @@ function FormEditorComponent() {
                                 field.handleChange(Number(e.target.value));
                                 handleUpdate();
                               }}
-                              className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-900 dark:text-slate-200 outline-none"
+                              className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded px-2 py-1 text-xs text-slate-900 dark:text-slate-200 outline-none"
                             >
                               {[1, 2, 3, 4, 5].map((lvl) => (
                                 <option key={lvl} value={lvl}>

@@ -1,22 +1,21 @@
 import { Editor } from "@monaco-editor/react";
 import { PDFViewer } from "@react-pdf/renderer";
 import {
+  Activity,
   Bot,
   Check,
   Copy,
-  FileJson,
   FileText,
-  RefreshCw,
-  Sparkles,
-  X,
-  Undo2,
-  Redo2,
-  Settings,
   History,
-  Sun,
-  Moon,
-  Activity,
   Lock,
+  Moon,
+  Redo2,
+  RefreshCw,
+  Settings,
+  Sparkles,
+  Sun,
+  Undo2,
+  X,
 } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -24,18 +23,18 @@ import AIAssistant from "./components/AIAssistant";
 import ATSAnalyzer from "./components/ATSAnalyzer";
 import FormEditor from "./components/FormEditor";
 import OnboardingTour from "./components/OnboardingTour";
-import SettingsModal from "./components/SettingsModal";
-import VersionManager from "./components/VersionManager";
 import ATSPDF from "./components/PDF/ATSPDF";
 import ExecutiveTemplate from "./components/PDF/ExecutiveTemplate";
 import MinimalTemplate from "./components/PDF/MinimalTemplate";
 import ModernTemplate from "./components/PDF/ModernTemplate";
 import VerticalTemplate from "./components/PDF/VerticalTemplate";
+import SettingsModal from "./components/SettingsModal";
+import VersionManager from "./components/VersionManager";
 import { useResumeStore } from "./store/useResumeStore";
 import { useThemeStore } from "./store/useThemeStore";
 import type { ResumeData } from "./types/ResumeData";
-import { generateWordResume } from "./utils/wordGenerator";
 import { getAIConfig } from "./utils/aiService";
+import { generateWordResume } from "./utils/wordGenerator";
 
 type TemplateType = "modern" | "minimal" | "vertical" | "executive" | "ats";
 
@@ -87,9 +86,17 @@ const JSON_SCHEMA = `
 `;
 
 function App() {
-  const { data, jsonData, error, version, lastInteraction, setData, setJsonData } =
-    useResumeStore();
-  const { undo, redo, pastStates, futureStates } = useResumeStore.temporal.getState();
+  const {
+    data,
+    jsonData,
+    error,
+    version,
+    lastInteraction,
+    setData,
+    setJsonData,
+  } = useResumeStore();
+  const { undo, redo, pastStates, futureStates } =
+    useResumeStore.temporal.getState();
   const { isDarkMode, toggleTheme } = useThemeStore();
   const [template, setTemplate] = useState<TemplateType>("modern");
   const [accentColor, setAccentColor] = useState<string>("#5350a2");
@@ -101,13 +108,16 @@ function App() {
   const [editMode, setEditMode] = useState<"code" | "form">("form");
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const aiConfig = useMemo(() => getAIConfig(), [showAIAssistant, showATSAnalyzer, showSettings]);
+  const aiConfig = useMemo(() => getAIConfig(), []);
   const hasAIKeys = !!(aiConfig.openaiKey || aiConfig.geminiKey);
 
   // Robust initialization
-  const [renderState, setRenderState] = useState<{data: ResumeData, remountKey: number}>(() => ({
+  const [renderState, setRenderState] = useState<{
+    data: ResumeData;
+    remountKey: number;
+  }>(() => ({
     data: useResumeStore.getState().data,
-    remountKey: 0
+    remountKey: 0,
   }));
 
   // Track structural versions to detect reorders vs text changes
@@ -116,8 +126,10 @@ function App() {
 
   useEffect(() => {
     // 1. Detect if this is a structural change (reorder or AI import)
-    const isStructural = version !== lastVersionRef.current || lastInteraction !== lastInteractionRef.current;
-    
+    const isStructural =
+      version !== lastVersionRef.current ||
+      lastInteraction !== lastInteractionRef.current;
+
     lastVersionRef.current = version;
     lastInteractionRef.current = lastInteraction;
 
@@ -125,18 +137,18 @@ function App() {
       // For reorders, update instantly and force remount
       setRenderState({
         data: data,
-        remountKey: Date.now() // Use timestamp for unique remount
+        remountKey: Date.now(), // Use timestamp for unique remount
       });
       return;
     }
 
     // 2. For text changes, use a throttled update without remounting
     const timer = setTimeout(() => {
-      setRenderState(prev => {
+      setRenderState((prev) => {
         // Only update data, keep remountKey the same to avoid viewer flash
         return {
           ...prev,
-          data: data
+          data: data,
         };
       });
     }, 1000);
@@ -175,17 +187,30 @@ function App() {
   const pdfDocument = useMemo(() => {
     switch (template) {
       case "modern":
-        return <ModernTemplate data={renderState.data} accentColor={accentColor} />;
+        return (
+          <ModernTemplate data={renderState.data} accentColor={accentColor} />
+        );
       case "minimal":
-        return <MinimalTemplate data={renderState.data} accentColor={accentColor} />;
+        return (
+          <MinimalTemplate data={renderState.data} accentColor={accentColor} />
+        );
       case "vertical":
-        return <VerticalTemplate data={renderState.data} accentColor={accentColor} />;
+        return (
+          <VerticalTemplate data={renderState.data} accentColor={accentColor} />
+        );
       case "executive":
-        return <ExecutiveTemplate data={renderState.data} accentColor={accentColor} />;
+        return (
+          <ExecutiveTemplate
+            data={renderState.data}
+            accentColor={accentColor}
+          />
+        );
       case "ats":
         return <ATSPDF data={renderState.data} />;
       default:
-        return <ModernTemplate data={renderState.data} accentColor={accentColor} />;
+        return (
+          <ModernTemplate data={renderState.data} accentColor={accentColor} />
+        );
     }
   }, [template, renderState.data, accentColor]);
 
@@ -229,27 +254,31 @@ function App() {
               alt="ResuMint Logo" 
               className="w-8 h-8 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]" 
             />
-            <h1 className="text-lg font-bold tracking-tight text-text-main uppercase italic">
-              ResuMint
+            <h1 
+              className="text-2xl text-text-main" 
+              style={{ fontFamily: "'Petit Formal Script', cursive" }}
+            >
+              Resumint
             </h1>
-          </div>
-
+            </div>
           <div className="h-6 w-px bg-border-base hidden md:block" />
 
           {/* Undo/Redo Controls */}
           <div className="flex items-center gap-1">
             <button
+              type="button"
               onClick={() => undo()}
               disabled={pastStates.length === 0}
-              className="p-2 text-text-muted enabled:hover:text-text-main enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed rounded-lg transition-all"
+              className="p-2 text-text-muted enabled:hover:text-text-main enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed rounded transition-all"
               title="Undo (Ctrl+Z)"
             >
               <Undo2 size={18} />
             </button>
             <button
+              type="button"
               onClick={() => redo()}
               disabled={futureStates.length === 0}
-              className="p-2 text-text-muted enabled:hover:text-text-main enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed rounded-lg transition-all"
+              className="p-2 text-text-muted enabled:hover:text-text-main enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed rounded transition-all"
               title="Redo (Ctrl+Y)"
             >
               <Redo2 size={18} />
@@ -262,7 +291,7 @@ function App() {
             <button
               type="button"
               onClick={() => generateWordResume(data)}
-              className="cursor-pointer flex items-center gap-2 bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-500 transition-colors shadow-lg mr-2"
+              className="cursor-pointer flex items-center gap-2 bg-emerald-600 text-white px-3 py-1.5 rounded text-xs font-bold hover:bg-emerald-500 transition-colors shadow-lg mr-2"
             >
               <FileText size={14} />
               DOWNLOAD WORD
@@ -272,7 +301,7 @@ function App() {
           <button
             type="button"
             onClick={() => setShowVersions(true)}
-            className="cursor-pointer flex items-center gap-2 bg-surface-bg text-text-main px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition-all border border-border-base mr-2"
+            className="cursor-pointer flex items-center gap-2 bg-surface-bg text-text-main px-3 py-1.5 rounded text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition-all border border-border-base mr-2"
           >
             <History size={16} />
             VERSIONS
@@ -282,7 +311,7 @@ function App() {
             type="button"
             data-tour="tour-ai"
             onClick={() => setShowAIAssistant(true)}
-            className="cursor-pointer flex items-center gap-2 bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-black hover:bg-emerald-500 transition-all shadow-[0_0_15px_rgba(16,185,129,0.4)] mr-2 group"
+            className="cursor-pointer flex items-center gap-2 bg-emerald-600 text-white px-3 py-1.5 rounded text-xs font-black hover:bg-emerald-500 transition-all shadow-[0_0_15px_rgba(16,185,129,0.4)] mr-2 group"
           >
             <Bot
               size={16}
@@ -293,18 +322,28 @@ function App() {
 
           <button
             type="button"
-            onClick={() => hasAIKeys ? setShowATSAnalyzer(true) : setShowSettings(true)}
-            className={`cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-black transition-all mr-2 group ${hasAIKeys ? 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'bg-slate-200 dark:bg-slate-800 text-text-muted hover:text-text-main border border-border-base'}`}
-            title={hasAIKeys ? "Analyze Resume with ATS" : "Configure API Keys to enable ATS Analysis"}
+            onClick={() =>
+              hasAIKeys ? setShowATSAnalyzer(true) : setShowSettings(true)
+            }
+            className={`cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded text-xs font-black transition-all mr-2 group ${hasAIKeys ? "bg-emerald-600 text-white hover:bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]" : "bg-slate-200 dark:bg-slate-800 text-text-muted hover:text-text-main border border-border-base"}`}
+            title={
+              hasAIKeys
+                ? "Analyze Resume with ATS"
+                : "Configure API Keys to enable ATS Analysis"
+            }
           >
-            {hasAIKeys ? <Activity size={16} className="group-hover:animate-pulse" /> : <Lock size={16} />}
+            {hasAIKeys ? (
+              <Activity size={16} className="group-hover:animate-pulse" />
+            ) : (
+              <Lock size={16} />
+            )}
             ATS ANALYZER
           </button>
 
           <button
             type="button"
             onClick={toggleTheme}
-            className="p-1.5 text-text-muted hover:text-text-main hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all border border-transparent hover:border-border-base cursor-pointer"
+            className="p-1.5 text-text-muted hover:text-text-main hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-all border border-transparent hover:border-border-base cursor-pointer"
             title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
@@ -313,7 +352,7 @@ function App() {
           <button
             type="button"
             onClick={() => setShowSettings(true)}
-            className="p-1.5 text-text-muted hover:text-text-main hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all border border-transparent hover:border-border-base cursor-pointer"
+            className="p-1.5 text-text-muted hover:text-text-main hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-all border border-transparent hover:border-border-base cursor-pointer"
             title="AI Settings"
           >
             <Settings size={20} />
@@ -352,9 +391,9 @@ function App() {
                   className="hidden"
                 />
               </label>
-              
+
               <div className="h-4 w-px bg-border-base" />
-              
+
               <label className="text-[10px] font-bold text-text-muted cursor-pointer hover:text-text-main transition-colors">
                 IMPORT JSON
                 <input
@@ -428,16 +467,16 @@ function App() {
                 type="button"
                 key={tpl.id}
                 onClick={() => setTemplate(tpl.id as TemplateType)}
-                className={`cursor-pointer group relative w-16 h-20 rounded-lg border-2 transition-all flex flex-col overflow-hidden bg-surface-bg ${template === tpl.id ? "border-blue-500 ring-2 ring-blue-500/20 shadow-[0_0_15px_rgba(99,102,241,0.3)]" : "border-border-base hover:border-slate-400 dark:hover:border-slate-500"}`}
+                className={`cursor-pointer group relative w-16 h-20 rounded border-2 transition-all flex flex-col overflow-hidden bg-surface-bg ${template === tpl.id ? "border-emerald-500 ring-2 ring-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.3)]" : "border-border-base hover:border-slate-400 dark:hover:border-slate-500"}`}
               >
                 <div className="flex-1 bg-app-bg">{tpl.icon}</div>
                 <div
-                  className={`py-1 text-[9px] font-bold text-center uppercase tracking-tighter ${template === tpl.id ? "bg-blue-500 text-white" : "bg-surface-bg text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"}`}
+                  className={`py-1 text-[9px] font-bold text-center uppercase tracking-tighter ${template === tpl.id ? "bg-emerald-500 text-white" : "bg-surface-bg text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"}`}
                 >
                   {tpl.name}
                 </div>
                 {template === tpl.id && (
-                  <div className="absolute top-1 right-1 bg-blue-500 text-white rounded-full p-0.5 shadow-lg">
+                  <div className="absolute top-1 right-1 bg-emerald-500 text-white rounded-full p-0.5 shadow-lg">
                     <Check size={8} strokeWidth={4} />
                   </div>
                 )}
@@ -452,7 +491,7 @@ function App() {
                 name: "Modern",
                 icon: (
                   <div className="w-full h-full flex flex-col gap-1 p-1">
-                    <div className="h-2 bg-blue-500 w-full rounded-xs"></div>
+                    <div className="h-2 bg-emerald-500 w-full rounded-xs"></div>
                     <div className="flex gap-1 h-full">
                       <div className="w-3/5 bg-slate-400/20 rounded-xs"></div>
                       <div className="w-2/5 bg-slate-400/20 rounded-xs"></div>
@@ -486,7 +525,7 @@ function App() {
                 icon: (
                   <div className="w-full h-full flex flex-col gap-1 p-1">
                     <div className="h-3 bg-slate-400/20 w-full rounded-xs"></div>
-                    <div className="h-1 bg-blue-500 w-full rounded-xs"></div>
+                    <div className="h-1 bg-emerald-500 w-full rounded-xs"></div>
                     <div className="h-full bg-slate-400/20 w-full rounded-xs"></div>
                   </div>
                 ),
@@ -496,16 +535,16 @@ function App() {
                 type="button"
                 key={tpl.id}
                 onClick={() => setTemplate(tpl.id as TemplateType)}
-                className={`cursor-pointer group relative w-16 h-20 rounded-lg border-2 transition-all flex flex-col overflow-hidden bg-surface-bg ${template === tpl.id ? "border-blue-500 ring-2 ring-blue-500/20 shadow-[0_0_15px_rgba(99,102,241,0.3)]" : "border-border-base hover:border-slate-400 dark:hover:border-slate-500"}`}
+                className={`cursor-pointer group relative w-16 h-20 rounded border-2 transition-all flex flex-col overflow-hidden bg-surface-bg ${template === tpl.id ? "border-emerald-500 ring-2 ring-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.3)]" : "border-border-base hover:border-slate-400 dark:hover:border-slate-500"}`}
               >
                 <div className="flex-1 bg-app-bg">{tpl.icon}</div>
                 <div
-                  className={`py-1 text-[9px] font-bold text-center uppercase tracking-tighter ${template === tpl.id ? "bg-blue-500 text-white" : "bg-surface-bg text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"}`}
+                  className={`py-1 text-[9px] font-bold text-center uppercase tracking-tighter ${template === tpl.id ? "bg-emerald-500 text-white" : "bg-surface-bg text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200"}`}
                 >
                   {tpl.name}
                 </div>
                 {template === tpl.id && (
-                  <div className="absolute top-1 right-1 bg-blue-500 text-white rounded-full p-0.5 shadow-lg">
+                  <div className="absolute top-1 right-1 bg-emerald-500 text-white rounded-full p-0.5 shadow-lg">
                     <Check size={8} strokeWidth={4} />
                   </div>
                 )}
@@ -558,7 +597,7 @@ function App() {
 
           <div className="flex-1 p-6 pt-28">
             <div
-              className="w-full h-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden bg-white border border-border-base"
+              className="w-full h-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded overflow-hidden bg-white border border-border-base"
               data-tour="tour-preview"
               data-darkreader-ignore="true"
               data-color-mode="light"
@@ -570,7 +609,6 @@ function App() {
                 showToolbar={true}
                 className="border-none"
               >
-
                 {pdfDocument}
               </PDFViewer>
             </div>
@@ -581,10 +619,13 @@ function App() {
       {/* Schema Modal */}
       {showSchema && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-8">
-          <div className="bg-surface-bg border border-border-base rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[80vh]">
+          <div className="bg-surface-bg border border-border-base rounded w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[80vh]">
             <div className="px-6 py-4 border-b border-border-base flex justify-between items-center bg-app-bg">
               <div className="flex items-center gap-2">
-                <Sparkles size={20} className="text-blue-500 dark:text-blue-400" />
+                <Sparkles
+                  size={20}
+                  className="text-emerald-500 dark:text-emerald-400"
+                />
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                   AI Resume Schema
                 </h2>
@@ -605,7 +646,7 @@ function App() {
                   follows this schema:"
                 </span>
               </div>
-              <pre className="p-4 bg-app-bg rounded-lg text-emerald-600 dark:text-emerald-400 text-xs font-mono border border-emerald-500/30 whitespace-pre-wrap">
+              <pre className="p-4 bg-app-bg rounded text-emerald-600 dark:text-emerald-400 text-xs font-mono border border-emerald-500/30 whitespace-pre-wrap">
                 {JSON_SCHEMA}
               </pre>
             </div>
@@ -613,7 +654,7 @@ function App() {
               <button
                 type="button"
                 onClick={() => copyToClipboard(JSON_SCHEMA)}
-                className="cursor-pointer flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-emerald-500 transition-colors"
+                className="cursor-pointer flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-emerald-500 transition-colors"
               >
                 <Copy size={16} />
                 COPY SCHEMA
@@ -637,11 +678,11 @@ function App() {
         isOpen={showATSAnalyzer}
         onClose={() => setShowATSAnalyzer(false)}
       />
-      <SettingsModal 
+      <SettingsModal
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
       />
-      <VersionManager 
+      <VersionManager
         isOpen={showVersions}
         onClose={() => setShowVersions(false)}
       />
@@ -651,4 +692,3 @@ function App() {
 }
 
 export default App;
-

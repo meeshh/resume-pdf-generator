@@ -2,17 +2,21 @@ import {
   Bot,
   Copy,
   ExternalLink,
+  Loader2,
   Sparkles,
   Trash2,
   Upload,
   X,
-  Loader2,
-  Zap
+  Zap,
 } from "lucide-react";
 import type React from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useResumeStore } from "../store/useResumeStore";
-import { optimizeResume, getAIConfig, type AIProviderConfig } from "../utils/aiService";
+import {
+  type AIProviderConfig,
+  getAIConfig,
+  optimizeResume,
+} from "../utils/aiService";
 
 interface AIAssistantProps {
   isOpen: boolean;
@@ -138,15 +142,19 @@ ${rawText || "No data provided yet."}
         rawText,
         JSON_SCHEMA,
         data.labels,
-        provider
+        provider,
       );
       setData(optimizedData);
       setRawText("");
       setPastedJson("");
       setError(null);
       onClose();
-    } catch (e: any) {
-      setError(e.message || "AI optimization failed. Please try again or use manual import.");
+    } catch (e: unknown) {
+      const error = e as Error;
+      setError(
+        error.message ||
+          "AI optimization failed. Please try again or use manual import.",
+      );
     } finally {
       setIsOptimizing(false);
     }
@@ -177,12 +185,15 @@ ${rawText || "No data provided yet."}
 
   return (
     <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-100 flex items-center justify-center p-4 sm:p-8">
-      <div className="bg-surface-bg border border-border-base rounded-2xl w-full max-w-4xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] transition-colors duration-300">
+      <div className="bg-surface-bg border border-border-base rounded w-full max-w-4xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] transition-colors duration-300">
         {/* Header */}
         <div className="px-6 py-5 border-b border-border-base flex justify-between items-center bg-surface-bg">
           <div className="flex items-center gap-3">
-            <div className="bg-emerald-500/20 p-2 rounded-xl">
-              <Bot size={24} className="text-emerald-500 dark:text-emerald-400" />
+            <div className="bg-emerald-500/20 p-2 rounded">
+              <Bot
+                size={24}
+                className="text-emerald-500 dark:text-emerald-400"
+              />
             </div>
             <div>
               <h2 className="text-xl font-bold text-text-main tracking-tight">
@@ -219,13 +230,13 @@ ${rawText || "No data provided yet."}
                 value={rawText}
                 onChange={(e) => setRawText(e.target.value)}
                 placeholder="Paste your current resume, LinkedIn profile text, or just describe your experience..."
-                className="w-full h-full bg-white dark:bg-slate-950 border border-border-base rounded-xl p-4 text-text-main text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all resize-none custom-scrollbar"
+                className="w-full h-full bg-white dark:bg-slate-950 border border-border-base rounded p-4 text-text-main text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all resize-none custom-scrollbar"
               />
               {rawText && (
                 <button
                   type="button"
                   onClick={() => setRawText("")}
-                  className="absolute top-2 right-2 p-1.5 bg-slate-100 dark:bg-slate-800 enabled:hover:bg-red-500/10 dark:enabled:hover:bg-red-500/20 text-text-muted enabled:hover:text-red-600 dark:enabled:hover:text-red-400 rounded-lg transition-all cursor-pointer"
+                  className="absolute top-2 right-2 p-1.5 bg-slate-100 dark:bg-slate-800 enabled:hover:bg-red-500/10 dark:enabled:hover:bg-red-500/20 text-text-muted enabled:hover:text-red-600 dark:enabled:hover:text-red-400 rounded transition-all cursor-pointer"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -239,12 +250,15 @@ ${rawText || "No data provided yet."}
                   type="button"
                   onClick={() => handleAIDirect("openai")}
                   disabled={!aiConfig.openaiKey || isOptimizing}
-                  className="group relative flex items-center justify-center gap-2 bg-emerald-600 enabled:hover:bg-emerald-500 disabled:bg-slate-200/50 dark:disabled:bg-slate-900/50 disabled:text-slate-400 dark:disabled:text-slate-600 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg active:scale-95 enabled:cursor-pointer disabled:cursor-not-allowed"
+                  className="group relative flex items-center justify-center gap-2 bg-emerald-600 enabled:hover:bg-emerald-500 disabled:bg-slate-200/50 dark:disabled:bg-slate-900/50 disabled:text-slate-400 dark:disabled:text-slate-600 text-white py-2.5 rounded text-xs font-bold transition-all shadow-lg active:scale-95 enabled:cursor-pointer disabled:cursor-not-allowed"
                 >
                   {isOptimizing ? (
                     <Loader2 size={14} className="animate-spin" />
                   ) : (
-                    <Zap size={14} className={aiConfig.openaiKey ? "text-yellow-300" : ""} />
+                    <Zap
+                      size={14}
+                      className={aiConfig.openaiKey ? "text-yellow-300" : ""}
+                    />
                   )}
                   {aiConfig.openaiKey ? "DIRECT OPTIMIZE (GPT)" : "NO GPT KEY"}
                 </button>
@@ -252,14 +266,19 @@ ${rawText || "No data provided yet."}
                   type="button"
                   onClick={() => handleAIDirect("gemini")}
                   disabled={!aiConfig.geminiKey || isOptimizing}
-                  className="group relative flex items-center justify-center gap-2 bg-blue-600 enabled:hover:bg-blue-500 disabled:bg-slate-200/50 dark:disabled:bg-slate-900/50 disabled:text-slate-400 dark:disabled:text-slate-600 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg active:scale-95 enabled:cursor-pointer disabled:cursor-not-allowed"
+                  className="group relative flex items-center justify-center gap-2 bg-emerald-600 enabled:hover:bg-emerald-500 disabled:bg-slate-200/50 dark:disabled:bg-slate-900/50 disabled:text-slate-400 dark:disabled:text-slate-600 text-white py-2.5 rounded text-xs font-bold transition-all shadow-lg active:scale-95 enabled:cursor-pointer disabled:cursor-not-allowed"
                 >
                   {isOptimizing ? (
                     <Loader2 size={14} className="animate-spin" />
                   ) : (
-                    <Zap size={14} className={aiConfig.geminiKey ? "text-yellow-300" : ""} />
+                    <Zap
+                      size={14}
+                      className={aiConfig.geminiKey ? "text-yellow-300" : ""}
+                    />
                   )}
-                  {aiConfig.geminiKey ? "DIRECT OPTIMIZE (GEMINI)" : "NO GEMINI KEY"}
+                  {aiConfig.geminiKey
+                    ? "DIRECT OPTIMIZE (GEMINI)"
+                    : "NO GEMINI KEY"}
                 </button>
               </div>
 
@@ -268,7 +287,7 @@ ${rawText || "No data provided yet."}
                 <button
                   type="button"
                   onClick={() => openAI("chatgpt")}
-                  className="flex items-center justify-center gap-2 bg-surface-bg enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 text-emerald-600 dark:text-emerald-400 border border-border-base py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                  className="flex items-center justify-center gap-2 bg-surface-bg enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 text-emerald-600 dark:text-emerald-400 border border-border-base py-2.5 rounded text-xs font-bold transition-all cursor-pointer"
                 >
                   <ExternalLink size={14} />
                   OPEN CHATGPT
@@ -276,7 +295,7 @@ ${rawText || "No data provided yet."}
                 <button
                   type="button"
                   onClick={() => openAI("gemini")}
-                  className="flex items-center justify-center gap-2 bg-surface-bg enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 text-emerald-600 dark:text-emerald-400 border border-border-base py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                  className="flex items-center justify-center gap-2 bg-surface-bg enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 text-emerald-600 dark:text-emerald-400 border border-border-base py-2.5 rounded text-xs font-bold transition-all cursor-pointer"
                 >
                   <Sparkles size={14} />
                   OPEN GEMINI
@@ -286,7 +305,7 @@ ${rawText || "No data provided yet."}
               <button
                 type="button"
                 onClick={copyPrompt}
-                className="w-full flex items-center justify-center gap-2 bg-app-bg enabled:hover:bg-slate-200 dark:enabled:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2.5 rounded-xl text-xs font-bold transition-all border border-border-base cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 bg-app-bg enabled:hover:bg-slate-200 dark:enabled:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2.5 rounded text-xs font-bold transition-all border border-border-base cursor-pointer"
               >
                 <Copy size={14} />
                 COPY PROMPT
@@ -315,10 +334,10 @@ ${rawText || "No data provided yet."}
                   setError(null);
                 }}
                 placeholder="Paste the JSON code block from AI here..."
-                className={`w-full h-full bg-white dark:bg-slate-950 border ${error ? "border-red-500/50" : "border-border-base"} rounded-xl p-4 text-emerald-600 dark:text-emerald-400 font-mono text-xs focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all resize-none custom-scrollbar`}
+                className={`w-full h-full bg-white dark:bg-slate-950 border ${error ? "border-red-500/50" : "border-border-base"} rounded p-4 text-emerald-600 dark:text-emerald-400 font-mono text-xs focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all resize-none custom-scrollbar`}
               />
               {error && (
-                <div className="absolute bottom-2 left-2 right-2 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-lg text-[10px] text-red-600 dark:text-red-400 font-bold animate-pulse">
+                <div className="absolute bottom-2 left-2 right-2 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded text-[10px] text-red-600 dark:text-red-400 font-bold animate-pulse">
                   {error}
                 </div>
               )}
@@ -328,14 +347,15 @@ ${rawText || "No data provided yet."}
               type="button"
               onClick={handleImport}
               disabled={!pastedJson.trim() || isOptimizing}
-              className="flex items-center justify-center gap-2 bg-purple-600 enabled:hover:bg-purple-500 disabled:bg-slate-200/50 dark:disabled:bg-slate-900/50 disabled:text-slate-400 dark:disabled:text-slate-600 text-white py-3 rounded-xl text-sm font-black transition-all shadow-xl active:scale-95 mt-2 enabled:cursor-pointer disabled:cursor-not-allowed"
+              className="flex items-center justify-center gap-2 bg-purple-600 enabled:hover:bg-purple-500 disabled:bg-slate-200/50 dark:disabled:bg-slate-900/50 disabled:text-slate-400 dark:disabled:text-slate-600 text-white py-3 rounded text-sm font-black transition-all shadow-xl active:scale-95 mt-2 enabled:cursor-pointer disabled:cursor-not-allowed"
             >
               <Upload size={18} />
               UPDATE RESUME DATA
             </button>
             <p className="text-[10px] text-text-muted text-center leading-relaxed italic">
-              AI direct optimization will replace your current data automatically. 
-              Manual paste requires clicking "Update Resume Data".
+              AI direct optimization will replace your current data
+              automatically. Manual paste requires clicking "Update Resume
+              Data".
             </p>
           </div>
         </div>

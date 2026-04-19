@@ -129,10 +129,7 @@ const OnboardingTour: React.FC = () => {
         // If near left edge (like the mode-toggle tabs), align with target's left
         if (left < windowMargin) left = coords.left;
         // Ensure it doesn't go past right edge
-        left = Math.min(
-          left,
-          window.innerWidth - tooltipWidth - windowMargin,
-        );
+        left = Math.min(left, window.innerWidth - tooltipWidth - windowMargin);
         // Ensure it doesn't go past left edge
         left = Math.max(left, windowMargin);
 
@@ -188,7 +185,7 @@ const OnboardingTour: React.FC = () => {
 
       {/* Spotlight highlight border */}
       <div
-        className="absolute border-2 border-blue-400 rounded-lg shadow-[0_0_30px_rgba(96,165,250,0.5)] transition-all duration-300 pointer-events-none"
+        className="absolute border-2 border-emerald-400 rounded shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all duration-300 pointer-events-none"
         style={{
           top: coords.top - 4,
           left: coords.left - 4,
@@ -199,7 +196,7 @@ const OnboardingTour: React.FC = () => {
 
       {/* Tooltip Card */}
       <div
-        className="absolute w-[320px] bg-slate-800 border border-slate-700 rounded-xl shadow-2xl p-6 pointer-events-auto transition-all duration-300"
+        className="absolute w-[320px] bg-slate-800 border border-slate-700 rounded shadow-2xl p-6 pointer-events-auto transition-all duration-300"
         style={getTooltipStyle()}
       >
         <button
@@ -211,7 +208,7 @@ const OnboardingTour: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-2 mb-3">
-          <div className="p-1.5 bg-emerald-500/20 rounded-lg">
+          <div className="p-1.5 bg-emerald-500/20 rounded">
             <Sparkles size={16} className="text-emerald-400" />
           </div>
           <h3 className="text-sm font-bold text-white tracking-tight uppercase italic">
@@ -240,7 +237,7 @@ const OnboardingTour: React.FC = () => {
               <button
                 type="button"
                 onClick={prevStep}
-                className="p-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                className="p-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded transition-colors"
               >
                 <ChevronLeft size={18} />
               </button>
@@ -248,7 +245,7 @@ const OnboardingTour: React.FC = () => {
             <button
               type="button"
               onClick={nextStep}
-              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all shadow-lg"
+              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded text-xs font-bold transition-all shadow-lg"
             >
               {currentStep === steps.length - 1 ? (
                 <>

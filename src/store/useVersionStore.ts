@@ -1,5 +1,5 @@
+import { del, get, set } from "idb-keyval";
 import { create } from "zustand";
-import { get, set, del } from "idb-keyval";
 import type { ResumeData } from "../types/ResumeData";
 import { useResumeStore } from "./useResumeStore";
 
@@ -12,7 +12,7 @@ export interface ResumeVersionMetadata {
 interface VersionStore {
   versions: ResumeVersionMetadata[];
   isLoading: boolean;
-  
+
   // Actions
   fetchVersions: () => Promise<void>;
   saveCurrentVersion: (name: string) => Promise<string>;
@@ -30,8 +30,10 @@ export const useVersionStore = create<VersionStore>((setStore, getStore) => ({
   fetchVersions: async () => {
     setStore({ isLoading: true });
     try {
-      const metadata = await get<ResumeVersionMetadata[]>(METADATA_KEY) || [];
-      setStore({ versions: metadata.sort((a, b) => b.updatedAt - a.updatedAt) });
+      const metadata = (await get<ResumeVersionMetadata[]>(METADATA_KEY)) || [];
+      setStore({
+        versions: metadata.sort((a, b) => b.updatedAt - a.updatedAt),
+      });
     } catch (error) {
       console.error("Failed to fetch versions:", error);
     } finally {
@@ -49,9 +51,9 @@ export const useVersionStore = create<VersionStore>((setStore, getStore) => ({
     await set(`resume-data-${id}`, data);
 
     // Update metadata
-    const metadata = await get<ResumeVersionMetadata[]>(METADATA_KEY) || [];
-    const existingIndex = metadata.findIndex(m => m.id === id);
-    
+    const metadata = (await get<ResumeVersionMetadata[]>(METADATA_KEY)) || [];
+    const existingIndex = metadata.findIndex((m) => m.id === id);
+
     if (existingIndex > -1) {
       metadata[existingIndex] = { ...metadata[existingIndex], name, updatedAt };
     } else {
@@ -60,7 +62,7 @@ export const useVersionStore = create<VersionStore>((setStore, getStore) => ({
 
     await set(METADATA_KEY, metadata);
     mainStore.setVersionId(id);
-    
+
     await getStore().fetchVersions();
     return id;
   },
@@ -76,27 +78,27 @@ export const useVersionStore = create<VersionStore>((setStore, getStore) => ({
 
   deleteVersion: async (id: string) => {
     await del(`resume-data-${id}`);
-    
-    const metadata = await get<ResumeVersionMetadata[]>(METADATA_KEY) || [];
-    const filtered = metadata.filter(m => m.id !== id);
+
+    const metadata = (await get<ResumeVersionMetadata[]>(METADATA_KEY)) || [];
+    const filtered = metadata.filter((m) => m.id !== id);
     await set(METADATA_KEY, filtered);
-    
+
     const mainStore = useResumeStore.getState();
     if (mainStore.versionId === id) {
       mainStore.setVersionId(null);
     }
-    
+
     await getStore().fetchVersions();
   },
 
   renameVersion: async (id: string, newName: string) => {
-    const metadata = await get<ResumeVersionMetadata[]>(METADATA_KEY) || [];
-    const index = metadata.findIndex(m => m.id === id);
+    const metadata = (await get<ResumeVersionMetadata[]>(METADATA_KEY)) || [];
+    const index = metadata.findIndex((m) => m.id === id);
     if (index > -1) {
       metadata[index].name = newName;
       metadata[index].updatedAt = Date.now();
       await set(METADATA_KEY, metadata);
       await getStore().fetchVersions();
     }
-  }
+  },
 }));

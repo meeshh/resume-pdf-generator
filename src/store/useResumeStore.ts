@@ -1,6 +1,6 @@
 import { arrayMove } from "@dnd-kit/sortable";
-import { create } from "zustand";
 import { temporal } from "zundo";
+import { create } from "zustand";
 import type { ResumeData } from "../types/ResumeData";
 
 interface ResumeStore {
@@ -180,4 +180,3 @@ export const useResumeStore = create<ResumeStore>()(
     },
   ),
 );
-

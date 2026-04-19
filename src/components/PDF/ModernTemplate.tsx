@@ -288,7 +288,9 @@ const ModernTemplate: React.FC<Props> = ({ data, accentColor = "#5350a2" }) => {
                   <View key={edu.id} style={styles.educationItem}>
                     <Text style={styles.educationDegree}>{edu.degree}</Text>
                     <View style={styles.itemHeader}>
-                      <Text style={styles.educationOrg}>{edu.organization}</Text>
+                      <Text style={styles.educationOrg}>
+                        {edu.organization}
+                      </Text>
                       <Text style={styles.educationDate}>
                         {edu.startYear}
                         {edu.startYear && edu.endYear ? " - " : ""}
@@ -318,7 +320,8 @@ const ModernTemplate: React.FC<Props> = ({ data, accentColor = "#5350a2" }) => {
                     <View style={{ flexDirection: "row", gap: 2 }}>
                       {Array.from({ length: 5 }).map((_, i) => (
                         <View
-                          key={i}
+                          // biome-ignore lint/suspicious/noArrayIndexKey: Fixed number of rating dots, index is safe as key here
+                          key={`dot-${lang.id}-${i}`}
                           style={{
                             width: 5,
                             height: 5,

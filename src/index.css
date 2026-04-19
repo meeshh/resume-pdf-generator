@@ -2,7 +2,7 @@
 
 @theme {
   --font-sans: "Inter", "system-ui", "-apple-system", "sans-serif";
-  
+
   /* 
     Define the semantic colors as CSS variables. 
     Tailwind v4 will automatically generate --color-app-bg etc. 
@@ -33,7 +33,8 @@
   Dark mode overrides for the CSS variables.
   This works whether .dark is on html or body.
 */
-.dark, [data-theme='dark'] {
+.dark,
+[data-theme="dark"] {
   --app-bg: #0f172a;
   --surface-bg: #1e293b;
   --border-base: #334155;

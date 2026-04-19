@@ -14,6 +14,6 @@ export const useThemeStore = create<ThemeStore>()(
     }),
     {
       name: "resumint-theme-storage",
-    }
-  )
+    },
+  ),
 );
