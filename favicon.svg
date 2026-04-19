@@ -1,0 +1,32 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="leafGradient" x1="256" y1="80" x2="256" y2="460" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7ED957"/> <!-- Fresh Lime Mint -->
+      <stop offset="100%" stop-color="#2D5A27"/> <!-- Deep Forest Green -->
+    </linearGradient>
+  </defs>
+
+  <!-- Main Leaf Body (Proportioned Curves) -->
+  <path d="M256 80 
+           C 340 80, 440 180, 440 300 
+           C 440 420, 340 460, 256 460 
+           C 172 460, 72 420, 72 300 
+           C 72 180, 172 80, 256 80 Z" 
+        fill="url(#leafGradient)" />
+
+  <!-- Center Vein -->
+  <path d="M256 80 Q 265 270 256 460" 
+        stroke="#FFFFFF" 
+        stroke-width="4" 
+        stroke-linecap="round" 
+        opacity="0.3"/>
+
+  <!-- Symmetric Organic Veins -->
+  <g stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.2">
+    <path d="M256 180 Q 320 200 380 160" />
+    <path d="M256 180 Q 192 200 132 160" />
+    <path d="M256 280 Q 340 300 410 260" />
+    <path d="M256 280 Q 172 300 102 260" />
+  </g>
+</svg>
