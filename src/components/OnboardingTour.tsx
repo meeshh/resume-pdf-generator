@@ -211,8 +211,8 @@ const OnboardingTour: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-2 mb-3">
-          <div className="p-1.5 bg-blue-500/20 rounded-lg">
-            <Sparkles size={16} className="text-blue-400" />
+          <div className="p-1.5 bg-emerald-500/20 rounded-lg">
+            <Sparkles size={16} className="text-emerald-400" />
           </div>
           <h3 className="text-sm font-bold text-white tracking-tight uppercase italic">
             {step.title}
@@ -229,7 +229,7 @@ const OnboardingTour: React.FC = () => {
               <div
                 key={s.title}
                 className={`h-1 rounded-full transition-all ${
-                  i === currentStep ? "w-4 bg-blue-500" : "w-1 bg-slate-600"
+                  i === currentStep ? "w-4 bg-emerald-500" : "w-1 bg-slate-600"
                 }`}
               />
             ))}
@@ -248,7 +248,7 @@ const OnboardingTour: React.FC = () => {
             <button
               type="button"
               onClick={nextStep}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all shadow-lg"
+              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all shadow-lg"
             >
               {currentStep === steps.length - 1 ? (
                 <>

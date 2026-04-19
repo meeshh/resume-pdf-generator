@@ -181,8 +181,8 @@ ${rawText || "No data provided yet."}
         {/* Header */}
         <div className="px-6 py-5 border-b border-border-base flex justify-between items-center bg-surface-bg">
           <div className="flex items-center gap-3">
-            <div className="bg-blue-500/20 p-2 rounded-xl">
-              <Bot size={24} className="text-blue-500 dark:text-blue-400" />
+            <div className="bg-emerald-500/20 p-2 rounded-xl">
+              <Bot size={24} className="text-emerald-500 dark:text-emerald-400" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-text-main tracking-tight">
@@ -206,8 +206,8 @@ ${rawText || "No data provided yet."}
         <div className="flex-1 overflow-y-auto p-6 flex flex-col lg:flex-row gap-8">
           {/* Step 1: Input */}
           <div className="flex-1 flex flex-col gap-4">
-            <div className="flex items-center gap-2 text-blue-500 dark:text-blue-400 mb-1">
-              <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-[10px] font-black">
+            <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400 mb-1">
+              <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-[10px] font-black">
                 1
               </div>
               <h3 className="font-bold text-sm uppercase tracking-wider">
@@ -219,7 +219,7 @@ ${rawText || "No data provided yet."}
                 value={rawText}
                 onChange={(e) => setRawText(e.target.value)}
                 placeholder="Paste your current resume, LinkedIn profile text, or just describe your experience..."
-                className="w-full h-full bg-white dark:bg-slate-950 border border-border-base rounded-xl p-4 text-text-main text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all resize-none"
+                className="w-full h-full bg-white dark:bg-slate-950 border border-border-base rounded-xl p-4 text-text-main text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all resize-none custom-scrollbar"
               />
               {rawText && (
                 <button
@@ -276,7 +276,7 @@ ${rawText || "No data provided yet."}
                 <button
                   type="button"
                   onClick={() => openAI("gemini")}
-                  className="flex items-center justify-center gap-2 bg-surface-bg enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 text-blue-600 dark:text-blue-400 border border-border-base py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                  className="flex items-center justify-center gap-2 bg-surface-bg enabled:hover:bg-slate-100 dark:enabled:hover:bg-slate-700 text-emerald-600 dark:text-emerald-400 border border-border-base py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer"
                 >
                   <Sparkles size={14} />
                   OPEN GEMINI
@@ -315,7 +315,7 @@ ${rawText || "No data provided yet."}
                   setError(null);
                 }}
                 placeholder="Paste the JSON code block from AI here..."
-                className={`w-full h-full bg-white dark:bg-slate-950 border ${error ? "border-red-500/50" : "border-border-base"} rounded-xl p-4 text-blue-600 dark:text-blue-400 font-mono text-xs focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all resize-none`}
+                className={`w-full h-full bg-white dark:bg-slate-950 border ${error ? "border-red-500/50" : "border-border-base"} rounded-xl p-4 text-emerald-600 dark:text-emerald-400 font-mono text-xs focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all resize-none custom-scrollbar`}
               />
               {error && (
                 <div className="absolute bottom-2 left-2 right-2 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-lg text-[10px] text-red-600 dark:text-red-400 font-bold animate-pulse">

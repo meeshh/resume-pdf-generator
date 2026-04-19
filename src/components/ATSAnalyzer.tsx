@@ -256,7 +256,7 @@ const ATSAnalyzer: React.FC<ATSAnalyzerProps> = ({ isOpen, onClose }) => {
                           <span className="text-[10px] font-black px-2 py-0.5 bg-app-bg text-text-muted rounded border border-border-base uppercase tracking-tighter">
                             {s.section}
                           </span>
-                          <span className={`text-[10px] font-black uppercase tracking-tighter ${s.type === 'add' ? 'text-emerald-500' : s.type === 'remove' ? 'text-red-500' : 'text-blue-500'}`}>
+                          <span className={`text-[10px] font-black uppercase tracking-tighter ${s.type === 'add' ? 'text-emerald-500' : s.type === 'remove' ? 'text-red-500' : 'text-emerald-500'}`}>
                             {s.type}
                           </span>
                         </div>
@@ -270,7 +270,7 @@ const ATSAnalyzer: React.FC<ATSAnalyzerProps> = ({ isOpen, onClose }) => {
                           <div className="text-xs text-text-main font-medium leading-relaxed bg-app-bg/30 p-2 rounded-lg border border-dashed border-border-base">
                             <div dangerouslySetInnerHTML={{ __html: s.suggested }} />
                           </div>
-                          <div className="text-[10px] text-text-muted bg-blue-500/5 p-2 rounded border border-blue-500/10">
+                          <div className="text-[10px] text-text-muted bg-emerald-500/5 p-2 rounded border border-emerald-500/10">
                             <strong>Reason:</strong> {s.reason}
                           </div>
                         </div>

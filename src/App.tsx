@@ -223,10 +223,11 @@ function App() {
       {/* Header */}
       <header className="bg-surface-bg border-b border-border-base px-6 py-3 flex justify-between items-center z-10 transition-colors duration-300">
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3 text-blue-500 dark:text-blue-400">
-            <FileJson
-              size={28}
-              className="drop-shadow-[0_0_8px_rgba(129,140,248,0.5)]"
+          <div className="flex items-center gap-3 text-emerald-500 dark:text-emerald-400">
+            <img 
+              src="/favicon.svg" 
+              alt="ResuMint Logo" 
+              className="w-8 h-8 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]" 
             />
             <h1 className="text-lg font-bold tracking-tight text-text-main uppercase italic">
               ResuMint
@@ -293,7 +294,7 @@ function App() {
           <button
             type="button"
             onClick={() => hasAIKeys ? setShowATSAnalyzer(true) : setShowSettings(true)}
-            className={`cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-black transition-all mr-2 group ${hasAIKeys ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.4)]' : 'bg-slate-200 dark:bg-slate-800 text-text-muted hover:text-text-main border border-border-base'}`}
+            className={`cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-black transition-all mr-2 group ${hasAIKeys ? 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'bg-slate-200 dark:bg-slate-800 text-text-muted hover:text-text-main border border-border-base'}`}
             title={hasAIKeys ? "Analyze Resume with ATS" : "Configure API Keys to enable ATS Analysis"}
           >
             {hasAIKeys ? <Activity size={16} className="group-hover:animate-pulse" /> : <Lock size={16} />}
@@ -329,20 +330,20 @@ function App() {
               <button
                 type="button"
                 onClick={() => setEditMode("form")}
-                className={`cursor-pointer text-[10px] font-black tracking-widest uppercase transition-colors ${editMode === "form" ? "text-blue-500 dark:text-blue-400" : "text-text-muted hover:text-text-main"}`}
+                className={`cursor-pointer text-[10px] font-black tracking-widest uppercase transition-colors ${editMode === "form" ? "text-emerald-500 dark:text-emerald-400" : "text-text-muted hover:text-text-main"}`}
               >
                 Form Editor
               </button>
               <button
                 type="button"
                 onClick={() => setEditMode("code")}
-                className={`cursor-pointer text-[10px] font-black tracking-widest uppercase transition-colors ${editMode === "code" ? "text-blue-500 dark:text-blue-400" : "text-text-muted hover:text-text-main"}`}
+                className={`cursor-pointer text-[10px] font-black tracking-widest uppercase transition-colors ${editMode === "code" ? "text-emerald-500 dark:text-emerald-400" : "text-text-muted hover:text-text-main"}`}
               >
                 Source Code
               </button>
             </div>
             <div className="flex gap-4 items-center">
-              <label className="text-[10px] font-bold text-blue-500 dark:text-blue-400 cursor-pointer hover:text-blue-600 dark:hover:text-blue-300 transition-colors">
+              <label className="text-[10px] font-bold text-emerald-500 dark:text-emerald-400 cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors">
                 ATTACH PHOTO
                 <input
                   type="file"
@@ -599,12 +600,12 @@ function App() {
             <div className="p-6 overflow-y-auto bg-surface-bg">
               <div className="mb-4 text-sm text-slate-500 dark:text-slate-400">
                 Copy this schema and tell your LLM: <br />
-                <span className="italic text-blue-600 dark:text-blue-300">
+                <span className="italic text-emerald-600 dark:text-emerald-300">
                   "Convert my resume text into a JSON object that strictly
                   follows this schema:"
                 </span>
               </div>
-              <pre className="p-4 bg-app-bg rounded-lg text-blue-600 dark:text-blue-400 text-xs font-mono border border-blue-500/30 whitespace-pre-wrap">
+              <pre className="p-4 bg-app-bg rounded-lg text-emerald-600 dark:text-emerald-400 text-xs font-mono border border-emerald-500/30 whitespace-pre-wrap">
                 {JSON_SCHEMA}
               </pre>
             </div>
@@ -612,7 +613,7 @@ function App() {
               <button
                 type="button"
                 onClick={() => copyToClipboard(JSON_SCHEMA)}
-                className="cursor-pointer flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-500 transition-colors"
+                className="cursor-pointer flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-emerald-500 transition-colors"
               >
                 <Copy size={16} />
                 COPY SCHEMA
