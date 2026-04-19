@@ -4,6 +4,7 @@ import { defineConfig } from "vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: "/resume-pdf-generator/",
   preview: {
     allowedHosts: ["localhost", "127.0.0.1", "meeshh.tailcd5898.ts.net"],
   },
