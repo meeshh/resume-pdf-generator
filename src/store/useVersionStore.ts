@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { get, set, del, keys } from "idb-keyval";
+import { get, set, del } from "idb-keyval";
 import type { ResumeData } from "../types/ResumeData";
 import { useResumeStore } from "./useResumeStore";
 

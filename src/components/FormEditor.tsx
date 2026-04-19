@@ -112,7 +112,7 @@ function FormEditorComponent() {
     const storeValues = JSON.stringify(data);
     
     if (currentValues !== storeValues) {
-      form.reset({ defaultValues: data });
+      form.reset(data);
     }
   }, [data, form.reset, form.state.values]);
 

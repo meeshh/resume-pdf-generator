@@ -8,7 +8,6 @@ import {
   FileText,
   RefreshCw,
   Sparkles,
-  Upload,
   X,
   Undo2,
   Redo2,
@@ -16,10 +15,13 @@ import {
   History,
   Sun,
   Moon,
+  Activity,
+  Lock,
 } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AIAssistant from "./components/AIAssistant";
+import ATSAnalyzer from "./components/ATSAnalyzer";
 import FormEditor from "./components/FormEditor";
 import OnboardingTour from "./components/OnboardingTour";
 import SettingsModal from "./components/SettingsModal";
@@ -30,10 +32,10 @@ import MinimalTemplate from "./components/PDF/MinimalTemplate";
 import ModernTemplate from "./components/PDF/ModernTemplate";
 import VerticalTemplate from "./components/PDF/VerticalTemplate";
 import { useResumeStore } from "./store/useResumeStore";
-import { useVersionStore } from "./store/useVersionStore";
 import { useThemeStore } from "./store/useThemeStore";
 import type { ResumeData } from "./types/ResumeData";
 import { generateWordResume } from "./utils/wordGenerator";
+import { getAIConfig } from "./utils/aiService";
 
 type TemplateType = "modern" | "minimal" | "vertical" | "executive" | "ats";
 
@@ -93,10 +95,14 @@ function App() {
   const [accentColor, setAccentColor] = useState<string>("#5350a2");
   const [showSchema, setShowSchema] = useState(false);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [showATSAnalyzer, setShowATSAnalyzer] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showVersions, setShowVersions] = useState(false);
   const [editMode, setEditMode] = useState<"code" | "form">("form");
   const [refreshKey, setRefreshKey] = useState(0);
+
+  const aiConfig = useMemo(() => getAIConfig(), [showAIAssistant, showATSAnalyzer, showSettings]);
+  const hasAIKeys = !!(aiConfig.openaiKey || aiConfig.geminiKey);
 
   // Robust initialization
   const [renderState, setRenderState] = useState<{data: ResumeData, remountKey: number}>(() => ({
@@ -282,6 +288,16 @@ function App() {
               className="group-hover:rotate-12 transition-transform"
             />
             MAGIC AI BUILDER
+          </button>
+
+          <button
+            type="button"
+            onClick={() => hasAIKeys ? setShowATSAnalyzer(true) : setShowSettings(true)}
+            className={`cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-black transition-all mr-2 group ${hasAIKeys ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.4)]' : 'bg-slate-200 dark:bg-slate-800 text-text-muted hover:text-text-main border border-border-base'}`}
+            title={hasAIKeys ? "Analyze Resume with ATS" : "Configure API Keys to enable ATS Analysis"}
+          >
+            {hasAIKeys ? <Activity size={16} className="group-hover:animate-pulse" /> : <Lock size={16} />}
+            ATS ANALYZER
           </button>
 
           <button
@@ -615,6 +631,10 @@ function App() {
       <AIAssistant
         isOpen={showAIAssistant}
         onClose={() => setShowAIAssistant(false)}
+      />
+      <ATSAnalyzer
+        isOpen={showATSAnalyzer}
+        onClose={() => setShowATSAnalyzer(false)}
       />
       <SettingsModal 
         isOpen={showSettings}
