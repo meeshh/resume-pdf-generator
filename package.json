@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "",
+  "homepage": "https://meeshh.github.com/resumint",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
